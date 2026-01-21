@@ -1,0 +1,27 @@
+{
+  "name": "platform-constructs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.26.0",
+  "devDependencies": {
+    "@types/lodash": "^4.17.23",
+    "@types/node": "^25.0.9",
+    "esbuild": "^0.27.2",
+    "typescript": "^5.9.3",
+    "nx": "22.3.3"
+  },
+  "dependencies": {
+    "aws-cdk": "^2.1101.0",
+    "aws-cdk-lib": "^2.235.0",
+    "lodash": "^4.17.21"
+  },
+  "nx": {}
+}
