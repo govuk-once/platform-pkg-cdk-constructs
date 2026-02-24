@@ -20,10 +20,11 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Configure Aws Credentials
-        uses: aws-actions/configure-aws-credentials@56d6a583f00f6bad6d19d91d53a7bc3b8143d0e9 # v5.1.1
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_ARN }}
           aws-region: ${{ vars.AWS_REGION }}
+          role-session-name: GH-Actions-Deploy-Prod-Constructs
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1
