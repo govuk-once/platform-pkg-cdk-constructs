@@ -42,4 +42,4 @@ jobs:
 
       - name: Show Terraform Plan
         working-directory: ./iac
-        run: terraform show -no-color tfplan.bin |  awk '{print "\`\`\`" $0 "\`\`\`"}' >> $GITHUB_STEP_SUMMARY
+        run: echo "\`\`\`"  >> $GITHUB_STEP_SUMMARY && terraform show -no-color tfplan.bin >> $GITHUB_STEP_SUMMARY && echo "\`\`\`"  >> $GITHUB_STEP_SUMMARY
