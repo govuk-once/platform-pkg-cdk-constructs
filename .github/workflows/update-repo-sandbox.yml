@@ -14,7 +14,7 @@ jobs:
   terraform-plan:
     name: Terraform Plan
     runs-on: ubuntu-latest
-    environment: non-prod
+    environment: sandbox
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -52,7 +52,7 @@ jobs:
 
   terraform-apply:
     name: Terraform Apply
-    environment: non-prod
+    environment: sandbox
     runs-on: ubuntu-latest
     needs: [terraform-plan]
     steps:
@@ -80,7 +80,7 @@ jobs:
         uses: actions/download-artifact@v5
         with:
           name: terraform-plan
-          path: iac
+          path: ./iac
 
       - name: Run Terraform Apply
         working-directory: ./iac
