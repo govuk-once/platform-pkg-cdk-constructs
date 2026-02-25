@@ -75,7 +75,7 @@ jobs:
         run: terraform init --backend-config=sandbox.config
 
       - name: Download Terraform Plan Artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v8
         with:
           name: terraform-plan
           path: iac/tfplan.bin
