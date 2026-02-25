@@ -29,13 +29,17 @@ jobs:
           terraform_version: 1.14.5
 
       - name: Initialize Terraform
+        working-directory: ./iac
         run: terraform init --backend-config=sandbox.config
         
       - name: Lint Terraform
+        working-directory: ./iac
         run: terraform fmt -check
 
       - name: Run Terraform Plan
+        working-directory: ./iac
         run: terraform plan -var-file=sandbox.tfvars -out=tfplan.bin
 
       - name: Show Terraform Plan
+        working-directory: ./iac
         run: terraform show --no-color tfplan.bin >> $GITHUB_STEP_SUMMARY

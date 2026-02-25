@@ -32,19 +32,22 @@ jobs:
           terraform_version: 1.14.5
 
       - name: Initialize Terraform
+        working-directory: ./iac
         run: terraform init --backend-config=prod.config
         
       - name: Run Terraform Plan
+        working-directory: ./iac
         run: terraform plan -var-file=prod.tfvars -out=tfplan.bin
 
       - name: Show Terraform Plan
+        working-directory: ./iac
         run: terraform show --no-color tfplan.bin >> $GITHUB_STEP_SUMMARY
 
       - name: Store JSON Terraform Plan
         uses: actions/upload-artifact@v4
         with:
           name: terraform-plan
-          path: tfplan.bin
+          path: iac/tfplan.bin
           retention-days: 1
 
   terraform-apply:
@@ -68,13 +71,15 @@ jobs:
           terraform_version: 1.14.5
 
       - name: Initialize Terraform
+        working-directory: ./iac
         run: terraform init --backend-config=prod.config
 
       - name: Download Terraform Plan Artifact
         uses: actions/download-artifact@v2
         with:
           name: terraform-plan
-          path: .
+          path: iac/tfplan.bin
 
       - name: Run Terraform Apply
+        working-directory: ./iac
         run: terraform apply tfplan.bin
