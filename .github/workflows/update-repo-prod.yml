@@ -64,6 +64,7 @@ jobs:
         with:
           role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_ARN }}
           aws-region: ${{ vars.AWS_REGION }}
+          role-session-name: GH-Actions-Deploy-Prod-ConstructRepo
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1
