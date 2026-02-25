@@ -79,7 +79,7 @@ jobs:
         uses: actions/download-artifact@v5
         with:
           name: terraform-plan
-          path: iac/tfplan.bin
+          path: ./iac
 
       - name: Run Terraform Apply
         working-directory: ./iac
