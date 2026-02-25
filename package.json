@@ -4,7 +4,8 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "vitest run",
+    "test:unit": "vitest run --coverage src --passWithNoTests",
     "prepare": "tsc",
     "build": "nx next:build && echo 'Build complete'",
     "lint": "nx eslint:lint"
@@ -39,7 +40,8 @@
     "aws-cdk": "^2.1101.0",
     "aws-cdk-lib": "^2.235.0",
     "constructs": "^10.4.5",
-    "lodash": "^4.17.21"
+    "lodash": "^4.17.21",
+    "vitest": "^4.0.18"
   },
   "nx": {}
 }
