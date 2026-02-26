@@ -1,6 +1,6 @@
 {
   "name": "once-platform-constructs",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
@@ -25,7 +25,8 @@
   },
   "exports": {
     ".": "./dist/esm/index.js",
-    "./": "./dist/esm/"
+    "./namingProviders": "./dist/esm/namingProviders/index.js",
+    "./types": "./dist/esm/types/index.js"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
