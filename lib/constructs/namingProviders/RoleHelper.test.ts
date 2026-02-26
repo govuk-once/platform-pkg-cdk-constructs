@@ -6,7 +6,7 @@ import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 
-import { RoleHelper, Operations } from '../RoleHelper';
+import { RoleHelper, CrudOperations as Operations } from '../RoleHelper';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const getStatementsForRoleId = (template: Template, roleId: string): any[] => {
