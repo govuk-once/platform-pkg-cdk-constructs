@@ -18,7 +18,9 @@ Provides an NPM installable suite of AWS CDK constructs and helper-factories for
 ```
 aws codeartifact login --tool npm --repository once-platform-npm --domain once-platform-registry --domain-owner 513758042057 --region eu-west-2
 ```
-1. Use `pnpm i @platform/constructs` to install this package.
+
+1. Install the CDK peer dependencies in your repo `pnpm i --save-dev aws-cdk aws-cdk-lib`
+1. Use `pnpm i once-platform-constructs` to install this package.
 
 ## Usage/Developing-Constructs
 
