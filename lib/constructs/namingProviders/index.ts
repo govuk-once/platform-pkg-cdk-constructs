@@ -1,3 +1,3 @@
-export * as INamingProvider from "./INamingProvider";
-export * as NullNamingProvider from "./NullNamingProvider";
-export * as ServiceEnvironmentNamingProvider from "./ServiceEnvironmentNamingProvider";
+export { INamingProvider } from "./INamingProvider";
+export { NullNamingProvider } from "./NullNamingProvider";
+export { ServiceEnvironmentNamingProvider } from "./ServiceEnvironmentNamingProvider";

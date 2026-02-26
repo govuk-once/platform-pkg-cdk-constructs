@@ -1,1 +1,1 @@
-export * as ILambdaRoute from "./ILambdaRoute";
+export { ILambdaRoute } from "./ILambdaRoute";
