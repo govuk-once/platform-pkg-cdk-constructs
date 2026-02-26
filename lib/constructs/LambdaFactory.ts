@@ -126,3 +126,5 @@ export class LambdaFactory extends FactoryBase {
     return fn instanceof lambda.Function;
   };
 }
+
+export default LambdaFactory;

@@ -146,3 +146,5 @@ export class StandardServiceDashboardFactory extends FactoryBase {
     return dashboard;
   }
 }
+
+export default StandardServiceDashboardFactory;

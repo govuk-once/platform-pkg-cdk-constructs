@@ -5,7 +5,7 @@ import * as keys from 'aws-cdk-lib/aws-kms';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as dynamo from 'aws-cdk-lib/aws-dynamodb';
 
-import { StandardServiceDashboardFactory } from './StandardServiceDashboard';
+import { StandardServiceDashboardFactory } from './StandardServiceDashboardFactory';
 import { ApiGatewayFactory } from './ApiGatewayFactory';
 
 const serviceName = 'dashboardService';

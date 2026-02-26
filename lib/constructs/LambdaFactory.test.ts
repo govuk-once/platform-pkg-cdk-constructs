@@ -3,7 +3,7 @@ import { App, Stack, aws_kms } from "aws-cdk-lib";
 import * as cdk from "aws-cdk-lib";
 import { Template } from "aws-cdk-lib/assertions";
 import * as lambda from "aws-cdk-lib/aws-lambda";
-import { LambdaFactory } from "./LambdaFunctionFactory";
+import { LambdaFactory } from "./LambdaFactory";
 import { NullNamingProvider } from "./namingProviders/NullNamingProvider";
 import * as logs from "aws-cdk-lib/aws-logs";
 import * as path from "path";
