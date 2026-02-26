@@ -1,19 +1,28 @@
 {
   "name": "once-platform-constructs",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
-  "main": "dist/index.js",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/index.d.ts",
+  "type": "module",
   "scripts": {
     "test": "vitest run",
     "test:unit": "vitest run --coverage src --passWithNoTests",
-    "prepare": "tsc",
-    "build": "nx next:build && echo 'Build complete'",
+    "prepublishOnly": "pnpm run build",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build": "pnpm run build:esm && pnpm run build:cjs",
     "lint": "nx eslint:lint"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.26.0",
+  "peerDependencies": {
+    "aws-cdk": "^2.1101.0",
+    "aws-cdk-lib": "^2.235.0"
+  },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
     "@eslint/json": "^0.14.0",
@@ -34,14 +43,14 @@
     "nx": "22.3.3",
     "plugin": "link:@nx/eslint/plugin",
     "prettier": "^3.8.0",
-    "typescript": "^5.9.3"
-  },
-  "dependencies": {
+    "typescript": "^5.9.3",
     "aws-cdk": "^2.1101.0",
     "aws-cdk-lib": "^2.235.0",
-    "constructs": "^10.4.5",
-    "lodash": "^4.17.21",
     "vitest": "^4.0.18"
+  },
+  "dependencies": {
+    "constructs": "^10.4.5",
+    "lodash": "^4.17.21"
   },
   "nx": {}
 }

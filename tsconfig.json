@@ -1,17 +1,12 @@
- {
+{
   "compilerOptions": {
-    "target": "es2020",
+    "target": "ES6",
     "strict": true,
-    "preserveConstEnums": true,
-    "noEmit": true,
-    "sourceMap": false,
-    "module":"preserve",
-    "moduleResolution": "bundler",
-    "esModuleInterop": true, 
+    "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true, 
-    "isolatedModules": true, 
-    "allowImportingTsExtensions": true,
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    "moduleResolution": "node"
   },
-  "exclude": ["node_modules", "**/*.test.ts"]
+  "include": ["./lib/constructs/**/*"]
 }
