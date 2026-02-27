@@ -24,9 +24,18 @@
     "aws-cdk-lib": "^2.235.0"
   },
   "exports": {
-    ".": "./dist/esm/index.js",
-    "./namingProviders": "./dist/esm/namingProviders/index.js",
-    "./types": "./dist/esm/types/index.js"
+    ".": {
+      "import": "./dist/cjs/index.js",
+      "require": "./dist/esm/index.js"
+    },
+    "./namingProviders": {
+      "import": "./dist/cjs/namingProviders/index.js",
+      "require": "./dist/esm/namingProviders/index.js"
+    },
+    "./types": {
+      "import": "./dist/cjs/types/index.js",
+      "require": "./dist/esm/types/index.js"
+    }
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
