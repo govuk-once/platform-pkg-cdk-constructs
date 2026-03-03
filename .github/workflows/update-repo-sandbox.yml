@@ -11,6 +11,17 @@ permissions:
   contents: read
 
 jobs:
+  js-test:
+    name: Run CDK Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install Deps
+        run: npm i
+      - name: Run Tests
+        run: echo "\`\`\`"  >> $GITHUB_STEP_SUMMARY && npm run test:ci >> $GITHUB_STEP_SUMMARY && echo "\`\`\`"  >> $GITHUB_STEP_SUMMARY
+
   terraform-plan:
     name: Terraform Plan
     runs-on: ubuntu-latest
