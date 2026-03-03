@@ -1,6 +1,6 @@
 {
   "name": "once-platform-constructs",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
@@ -11,7 +11,7 @@
     "test:unit": "vitest run --coverage src --passWithNoTests",
     "prepublishOnly": "pnpm run build",
     "build:esm": "tsc -p tsconfig.esm.json",
-    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build:cjs": "tsc -p tsconfig.js.json",
     "build": "pnpm run build:esm && pnpm run build:cjs",
     "lint": "nx eslint:lint"
   },
@@ -26,15 +26,21 @@
   "exports": {
     ".": {
       "default": "./dist/cjs/index.js",
-      "import": "./dist/esm/index.js"
+      "require": "./dist/cjs/index.js",
+      "import": "./dist/esm/index.js",
+      "types": "./dist/esm/index.d.ts"
     },
     "./namingProviders": {
       "default": "./dist/cjs/namingProviders/index.js",
-      "import": "./dist/esm/namingProviders/index.js"
+      "require": "./dist/cjs/namingProviders/index.js",
+      "import": "./dist/esm/namingProviders/index.js",
+      "types": "./dist/esm/namingProviders/index.d.ts"
     },
     "./types": {
       "default": "./dist/cjs/types/index.js",
-      "import": "./dist/esm/types/index.js"
+      "require": "./dist/cjs/types/index.js",
+      "import": "./dist/esm/types/index.js",
+      "types": "./dist/esm/namingProviders/index.d.ts"
     }
   },
   "devDependencies": {
