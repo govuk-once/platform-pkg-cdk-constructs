@@ -1,0 +1,6 @@
+lib/**/*
+ADR/**/*
+.github/**/*
+iac/**/*
+testData/**/*
+

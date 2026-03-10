@@ -1,12 +1,14 @@
 {
   "compilerOptions": {
-    "target": "ES6",
+    "target": "esnext",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "declaration": true,
-    "moduleResolution": "node"
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "baseUrl": "."
   },
   "include": ["./lib/constructs/**/*"]
 }

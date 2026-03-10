@@ -1,6 +1,6 @@
 {
   "name": "once-platform-constructs",
-  "version": "1.0.1",
+  "version": "1.1.1",
   "description": "",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
@@ -22,6 +22,28 @@
   "peerDependencies": {
     "aws-cdk": "^2.1101.0",
     "aws-cdk-lib": "^2.235.0"
+  },
+  "exports": {
+    ".": {
+      "require": {
+        "default": "./dist/cjs/index.js",
+        "types": "./dist/cjs/index.d.ts"
+      },
+      "import": {
+          "default": "./dist/esm/index.js",
+          "types": "./dist/esm/index.d.ts"
+      }
+    },
+    "./namingProviders": {
+      "require": {
+        "default": "./dist/cjs/namingProviders/index.js",
+        "types": "./dist/cjs/namingProviders/index.d.ts"
+      },
+      "import": {
+        "default": "./dist/esm/namingProviders/index.js",
+        "types": "./dist/esm/namingProviders/index.d.ts"
+      }
+    }
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",

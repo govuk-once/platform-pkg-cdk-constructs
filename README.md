@@ -15,8 +15,9 @@ Provides an NPM installable suite of AWS CDK constructs and helper-factories for
 
 1. Ensure your AWS CLI is correctly configured to point at your account and region. (gds-cli at present)
 1. Acquire a one-hour token and configure your `.npmrc` by using the AWS CLI
+
 ```
-aws codeartifact login --tool npm --repository once-platform-npm --domain once-platform-registry --domain-owner 513758042057 --region eu-west-2
+aws codeartifact login --tool npm --repository registry-sandbox-repo --domain registry-sandbox --domain-owner 513758042057 --region eu-west-2
 ```
 
 1. Install the CDK peer dependencies in your repo `pnpm i --save-dev aws-cdk aws-cdk-lib`
