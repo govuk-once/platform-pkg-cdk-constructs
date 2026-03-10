@@ -36,8 +36,8 @@ describe("lambdaFactory", () => {
     const logKey = new aws_kms.Key(stack, "testkey", {});
 
     lambdaFactory.createLambda("ServiceTemplateHelloFunction", {
-      code: lambda.Code.fromAsset(
-        path.join(__dirname, "../testData/src/helloworld"),
+      code: lambda.Code.fromInline(
+        `exports.handler = async (event) => {return {statusCode:200, body:"hello:};};`,
       ),
       description: 'Displays the message "And is a goodnight from him"',
       duration: 10,
@@ -74,8 +74,8 @@ describe("lambdaFactory", () => {
     const logKey = new aws_kms.Key(stack, "testkey", {});
 
     lambdaFactory.createLambda("ServiceTemplateHelloFunction", {
-      code: lambda.Code.fromAsset(
-        path.join(__dirname, "../testData/src/helloworld"),
+      code: lambda.Code.fromInline(
+        `exports.handler = async (event) => {return {statusCode:200, body:"hello:};};`,
       ),
       description: 'Displays the message "And is a goodnight from him"',
       duration: 10,
@@ -106,8 +106,8 @@ describe("lambdaFactory", () => {
     const logKey = new aws_kms.Key(stack, "testkey", {});
 
     lambdaFactory.createLambda("ServiceTemplateHelloFunction", {
-      code: lambda.Code.fromAsset(
-        path.join(__dirname, "../testData/src/helloworld"),
+      code: lambda.Code.fromInline(
+        `exports.handler = async (event) => {return {statusCode:200, body:"hello:};};`,
       ),
       description: 'Displays the message "And is a goodnight from him"',
       duration: 10,
@@ -146,8 +146,8 @@ describe("lambdaFactory", () => {
     const lambdaRoute = lambdaFactory.createLambdaWithApiRoute(
       "ServiceTemplateHelloFunction",
       {
-        code: lambda.Code.fromAsset(
-          path.join(__dirname, "../testData/src/helloworld"),
+        code: lambda.Code.fromInline(
+          `exports.handler = async (event) => {return {statusCode:200, body:"hello:};};`,
         ),
         description: 'Display message "Hello world"',
         duration: 10,
@@ -190,8 +190,8 @@ describe("lambdaFactory", () => {
     const logKey = new aws_kms.Key(stack, "testkey", {});
 
     const func = lambdaFactory.createLambda("ServiceTemplateHelloFunction", {
-      code: lambda.Code.fromAsset(
-        path.join(__dirname, "../testData/src/helloworld"),
+      code: lambda.Code.fromInline(
+        `exports.handler = async (event) => {return {statusCode:200, body:"hello:};};`,
       ),
       description: 'Displays the message "And is a goodnight from him"',
       duration: 10,
@@ -225,8 +225,8 @@ describe("lambdaFactory", () => {
     const logKey = new aws_kms.Key(stack, "testkey", {});
 
     const func = lambdaFactory.createLambda("ServiceTemplateHelloFunction", {
-      code: lambda.Code.fromAsset(
-        path.join(__dirname, "../testData/src/helloworld"),
+      code: lambda.Code.fromInline(
+        `exports.handler = async (event) => {return {statusCode:200, body:"hello:};};`,
       ),
       description: 'Displays the message "And is a goodnight from him"',
       duration: 10,
@@ -260,8 +260,8 @@ describe("lambdaFactory", () => {
     const logKey = new aws_kms.Key(stack, "testkey", {});
 
     const func = lambdaFactory.createLambda("ServiceTemplateHelloFunction", {
-      code: lambda.Code.fromAsset(
-        path.join(__dirname, "../testData/src/helloworld"),
+      code: lambda.Code.fromInline(
+        `exports.handler = async (event) => {return {statusCode:200, body:"hello:};};`,
       ),
       description: 'Displays the message "And is a goodnight from him"',
       duration: 10,
