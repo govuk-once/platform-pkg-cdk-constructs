@@ -1,12 +1,12 @@
-import { Construct } from 'constructs';
-import { FactoryBase } from './FactoryBase';
-import { INamingProvider } from './namingProviders/INamingProvider';
-import * as cdk from 'aws-cdk-lib';
-import * as cloudfront from 'aws-cdk-lib/aws-cloudfront';
-import * as origins from 'aws-cdk-lib/aws-cloudfront-origins';
-import * as acm from 'aws-cdk-lib/aws-certificatemanager';
-import * as s3 from 'aws-cdk-lib/aws-s3';
-import * as apigateway from 'aws-cdk-lib/aws-apigateway';
+import { Construct } from "constructs";
+import { FactoryBase } from "./FactoryBase.js";
+import { INamingProvider } from "./namingProviders/INamingProvider.js";
+import * as cdk from "aws-cdk-lib";
+import * as cloudfront from "aws-cdk-lib/aws-cloudfront";
+import * as origins from "aws-cdk-lib/aws-cloudfront-origins";
+import * as acm from "aws-cdk-lib/aws-certificatemanager";
+import * as s3 from "aws-cdk-lib/aws-s3";
+import * as apigateway from "aws-cdk-lib/aws-apigateway";
 
 interface ICloudFrontDistrubutionProperties {
   domainNames?: string[];
@@ -19,7 +19,7 @@ interface ICloudFrontDistrubutionProperties {
   };
 
   behavior?: Partial<cloudfront.BehaviorOptions>;
-  distribution?: Omit<cloudfront.DistributionProps, 'defaultBehavior'>;
+  distribution?: Omit<cloudfront.DistributionProps, "defaultBehavior">;
 }
 
 export interface ICloudFrontDistrubutionS3Properties extends ICloudFrontDistrubutionProperties {
@@ -56,7 +56,7 @@ export class CloudFrontDistrubutionFactory extends FactoryBase {
         this.scope,
         `${this.getResourceId(id)}_origin_access_control`,
         {
-          description: 'origin access control',
+          description: "origin access control",
         },
       );
 
@@ -83,7 +83,7 @@ export class CloudFrontDistrubutionFactory extends FactoryBase {
       certificate: props.certificate,
       webAclId: this.getResourceId(props.webAclId),
 
-      defaultRootObject: props.defaultRootObject ?? 'index.html',
+      defaultRootObject: props.defaultRootObject ?? "index.html",
       errorResponses: props.errorResponses,
 
       ...loggingProps,

@@ -1,16 +1,16 @@
-import { Construct } from 'constructs';
-import { ILambdaRoute } from './types/ILambdaRoute';
-import { FactoryBase } from './FactoryBase';
-import { INamingProvider } from './namingProviders/INamingProvider';
-import * as cdk from 'aws-cdk-lib';
-import * as lambda from 'aws-cdk-lib/aws-lambda';
-import * as logs from 'aws-cdk-lib/aws-logs';
+import { Construct } from "constructs";
+import { ILambdaRoute } from "./types/ILambdaRoute.js";
+import { FactoryBase } from "./FactoryBase.js";
+import { INamingProvider } from "./namingProviders/INamingProvider.js";
+import * as cdk from "aws-cdk-lib";
+import * as lambda from "aws-cdk-lib/aws-lambda";
+import * as logs from "aws-cdk-lib/aws-logs";
 
 class constants {
   static readonly MEMORY_SIZE: number = 256;
   static readonly DURATION: number = 10;
-  static readonly METHODS: string[] = ['get'];
-  static readonly PATHERROR: string = 'PATH NOT SET';
+  static readonly METHODS: string[] = ["get"];
+  static readonly PATHERROR: string = "PATH NOT SET";
   static readonly RETENTIONDAYS: logs.RetentionDays.TWO_WEEKS;
 }
 
@@ -126,3 +126,5 @@ export class LambdaFactory extends FactoryBase {
     return fn instanceof lambda.Function;
   };
 }
+
+export default LambdaFactory;

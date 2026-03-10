@@ -1,5 +1,5 @@
-import { INamingProvider } from './namingProviders/INamingProvider';
-import { ServiceEnvironmentNamingProvider } from './namingProviders/ServiceEnvironmentNamingProvider';
+import { INamingProvider } from "./namingProviders/INamingProvider.js";
+import { ServiceEnvironmentNamingProvider } from "./namingProviders/ServiceEnvironmentNamingProvider.js";
 
 export abstract class FactoryBase {
   private readonly namingProvider: INamingProvider;
@@ -10,7 +10,7 @@ export abstract class FactoryBase {
   }
 
   getResourceId(id?: string): string {
-    return this.namingProvider.getResourceId(id) ?? 'not set';
+    return this.namingProvider.getResourceId(id) ?? "not set";
   }
 
   getResourceName(name: string): string {

@@ -1,30 +1,30 @@
-import { App, Stack } from 'aws-cdk-lib';
-import * as cdk from 'aws-cdk-lib';
-import { Template, Match } from 'aws-cdk-lib/assertions';
-import * as dynamoDB from 'aws-cdk-lib/aws-dynamodb';
-import * as kms from 'aws-cdk-lib/aws-kms';
-import { describe, test, expect } from 'vitest';
+import { App, Stack } from "aws-cdk-lib";
+import * as cdk from "aws-cdk-lib";
+import { Template, Match } from "aws-cdk-lib/assertions";
+import * as dynamoDB from "aws-cdk-lib/aws-dynamodb";
+import * as kms from "aws-cdk-lib/aws-kms";
+import { describe, test, expect } from "vitest";
 
-import { DynamoTableFactory } from './DynamoTableFactory';
-import { NullNamingProvider } from './namingProviders/NullNamingProvider';
+import { DynamoTableFactory } from "./DynamoTableFactory.js";
+import { NullNamingProvider } from "./namingProviders/NullNamingProvider.js";
 
-describe('DynamoTableFactory', () => {
-  const env = (process.env.ENVIRONMENT ?? process.env.USER ?? 'unkown').replace(
+describe("DynamoTableFactory", () => {
+  const env = (process.env.ENVIRONMENT ?? process.env.USER ?? "unkown").replace(
     /[^a-zA-Z0-9-]/g,
-    '',
+    "",
   );
-  const serviceName = 'databaseservice';
+  const serviceName = "databaseservice";
 
-  test('creates a S3 distrubution using service naming provider', () => {
+  test("creates a S3 distrubution using service naming provider", () => {
     const app = new App();
-    const stack = new Stack(app, 'testCloudfront');
+    const stack = new Stack(app, "testCloudfront");
 
-    const factory = new DynamoTableFactory(stack, 'eu-west', serviceName);
+    const factory = new DynamoTableFactory(stack, "eu-west", serviceName);
 
-    factory.createTable('petShop', {
-      tableName: 'petStore',
-      partitionKey: { name: 'pk', type: dynamoDB.AttributeType.STRING },
-      sortKey: { name: 'sk', type: dynamoDB.AttributeType.STRING },
+    factory.createTable("petShop", {
+      tableName: "petStore",
+      partitionKey: { name: "pk", type: dynamoDB.AttributeType.STRING },
+      sortKey: { name: "sk", type: dynamoDB.AttributeType.STRING },
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
 
@@ -36,16 +36,16 @@ describe('DynamoTableFactory', () => {
     //the service is set
     expect(JSON.stringify(template).includes(serviceName)).toBe(true);
 
-    template.hasResourceProperties('AWS::DynamoDB::Table', {
+    template.hasResourceProperties("AWS::DynamoDB::Table", {
       TableName: `${env}-${serviceName}-petStore`,
 
       KeySchema: Match.arrayWith([
-        Match.objectLike({ AttributeName: 'pk', KeyType: 'HASH' }),
-        Match.objectLike({ AttributeName: 'sk', KeyType: 'RANGE' }),
+        Match.objectLike({ AttributeName: "pk", KeyType: "HASH" }),
+        Match.objectLike({ AttributeName: "sk", KeyType: "RANGE" }),
       ]),
 
       TimeToLiveSpecification: {
-        AttributeName: 'TTL',
+        AttributeName: "TTL",
         Enabled: true,
       },
 
@@ -55,27 +55,27 @@ describe('DynamoTableFactory', () => {
 
       SSESpecification: {
         SSEEnabled: true,
-        SSEType: 'KMS',
+        SSEType: "KMS",
         KMSMasterKeyId: Match.anyValue(),
       },
     });
   });
 
-  test('creates a S3 distrubution using overriding naming provider', () => {
+  test("creates a S3 distrubution using overriding naming provider", () => {
     const app = new App();
-    const stack = new Stack(app, 'testCloudfront');
+    const stack = new Stack(app, "testCloudfront");
 
     const factory = new DynamoTableFactory(
       stack,
-      'eu-west',
+      "eu-west",
       serviceName,
       new NullNamingProvider(),
     );
 
-    factory.createTable('petShop', {
-      tableName: 'petStore',
-      partitionKey: { name: 'pk', type: dynamoDB.AttributeType.STRING },
-      sortKey: { name: 'sk', type: dynamoDB.AttributeType.STRING },
+    factory.createTable("petShop", {
+      tableName: "petStore",
+      partitionKey: { name: "pk", type: dynamoDB.AttributeType.STRING },
+      sortKey: { name: "sk", type: dynamoDB.AttributeType.STRING },
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
 
@@ -90,32 +90,32 @@ describe('DynamoTableFactory', () => {
 
   test('creates a table with defaults: TTL = "TTL", Customer managed encryption with new key', () => {
     const app = new App();
-    const stack = new Stack(app, 'TestDynamoStack');
+    const stack = new Stack(app, "TestDynamoStack");
 
-    const factory = new DynamoTableFactory(stack, 'eu-west', serviceName);
+    const factory = new DynamoTableFactory(stack, "eu-west", serviceName);
 
-    factory.createTable('petShop', {
-      tableName: 'petStore',
-      partitionKey: { name: 'pk', type: dynamoDB.AttributeType.STRING },
-      sortKey: { name: 'sk', type: dynamoDB.AttributeType.STRING },
+    factory.createTable("petShop", {
+      tableName: "petStore",
+      partitionKey: { name: "pk", type: dynamoDB.AttributeType.STRING },
+      sortKey: { name: "sk", type: dynamoDB.AttributeType.STRING },
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
 
     const template = Template.fromStack(stack);
 
-    template.resourceCountIs('AWS::KMS::Key', 1);
-    template.resourceCountIs('AWS::DynamoDB::Table', 1);
+    template.resourceCountIs("AWS::KMS::Key", 1);
+    template.resourceCountIs("AWS::DynamoDB::Table", 1);
 
-    template.hasResourceProperties('AWS::DynamoDB::Table', {
+    template.hasResourceProperties("AWS::DynamoDB::Table", {
       TableName: `${env}-${serviceName}-petStore`,
 
       KeySchema: Match.arrayWith([
-        Match.objectLike({ AttributeName: 'pk', KeyType: 'HASH' }),
-        Match.objectLike({ AttributeName: 'sk', KeyType: 'RANGE' }),
+        Match.objectLike({ AttributeName: "pk", KeyType: "HASH" }),
+        Match.objectLike({ AttributeName: "sk", KeyType: "RANGE" }),
       ]),
 
       TimeToLiveSpecification: {
-        AttributeName: 'TTL',
+        AttributeName: "TTL",
         Enabled: true,
       },
 
@@ -125,56 +125,56 @@ describe('DynamoTableFactory', () => {
 
       SSESpecification: {
         SSEEnabled: true,
-        SSEType: 'KMS',
+        SSEType: "KMS",
         KMSMasterKeyId: Match.anyValue(),
       },
     });
   });
 
-  test('creates a table and used provided key', () => {
+  test("creates a table and used provided key", () => {
     const app = new App();
-    const stack = new Stack(app, 'TestDynamoStack');
+    const stack = new Stack(app, "TestDynamoStack");
 
-    const encryptionKey = new kms.Key(stack, 'providedKey', {
+    const encryptionKey = new kms.Key(stack, "providedKey", {
       enableKeyRotation: true,
     });
 
-    const factory = new DynamoTableFactory(stack, 'eu-west', serviceName);
+    const factory = new DynamoTableFactory(stack, "eu-west", serviceName);
 
-    factory.createTable('petShop', {
-      tableName: 'petStore',
-      partitionKey: { name: 'pk', type: dynamoDB.AttributeType.STRING },
-      sortKey: { name: 'sk', type: dynamoDB.AttributeType.STRING },
+    factory.createTable("petShop", {
+      tableName: "petStore",
+      partitionKey: { name: "pk", type: dynamoDB.AttributeType.STRING },
+      sortKey: { name: "sk", type: dynamoDB.AttributeType.STRING },
       key: encryptionKey,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
 
     const template = Template.fromStack(stack);
 
-    template.resourceCountIs('AWS::KMS::Key', 1);
-    template.resourceCountIs('AWS::DynamoDB::Table', 1);
+    template.resourceCountIs("AWS::KMS::Key", 1);
+    template.resourceCountIs("AWS::DynamoDB::Table", 1);
 
-    template.hasResourceProperties('AWS::DynamoDB::Table', {
+    template.hasResourceProperties("AWS::DynamoDB::Table", {
       TableName: `${env}-${serviceName}-petStore`,
 
       SSESpecification: {
         SSEEnabled: true,
-        SSEType: 'KMS',
+        SSEType: "KMS",
         KMSMasterKeyId: Match.anyValue(),
       },
     });
   });
 
-  test('creates a table and overrides steams and point in time recovery', () => {
+  test("creates a table and overrides steams and point in time recovery", () => {
     const app = new App();
-    const stack = new Stack(app, 'TestDynamoStack');
+    const stack = new Stack(app, "TestDynamoStack");
 
-    const factory = new DynamoTableFactory(stack, 'eu-west', serviceName);
+    const factory = new DynamoTableFactory(stack, "eu-west", serviceName);
 
-    factory.createTable('petShop', {
-      tableName: 'petStore',
-      partitionKey: { name: 'pk', type: dynamoDB.AttributeType.STRING },
-      sortKey: { name: 'sk', type: dynamoDB.AttributeType.STRING },
+    factory.createTable("petShop", {
+      tableName: "petStore",
+      partitionKey: { name: "pk", type: dynamoDB.AttributeType.STRING },
+      sortKey: { name: "sk", type: dynamoDB.AttributeType.STRING },
       stream: dynamoDB.StreamViewType.NEW_AND_OLD_IMAGES,
       pointInTimeRecoverySpecification: {
         pointInTimeRecoveryEnabled: false,
@@ -184,9 +184,9 @@ describe('DynamoTableFactory', () => {
 
     const template = Template.fromStack(stack);
 
-    template.resourceCountIs('AWS::DynamoDB::Table', 1);
+    template.resourceCountIs("AWS::DynamoDB::Table", 1);
 
-    template.hasResourceProperties('AWS::DynamoDB::Table', {
+    template.hasResourceProperties("AWS::DynamoDB::Table", {
       TableName: `${env}-${serviceName}-petStore`,
 
       PointInTimeRecoverySpecification: {
@@ -194,34 +194,34 @@ describe('DynamoTableFactory', () => {
       },
 
       StreamSpecification: {
-        StreamViewType: 'NEW_AND_OLD_IMAGES',
+        StreamViewType: "NEW_AND_OLD_IMAGES",
       },
     });
   });
 
-  test('creates a table and overrides TTL', () => {
+  test("creates a table and overrides TTL", () => {
     const app = new App();
-    const stack = new Stack(app, 'TestDynamoStack');
+    const stack = new Stack(app, "TestDynamoStack");
 
-    const factory = new DynamoTableFactory(stack, 'eu-west', serviceName);
+    const factory = new DynamoTableFactory(stack, "eu-west", serviceName);
 
-    factory.createTable('petShop', {
-      tableName: 'petStore',
-      partitionKey: { name: 'pk', type: dynamoDB.AttributeType.STRING },
-      sortKey: { name: 'sk', type: dynamoDB.AttributeType.STRING },
-      timeToLiveAttribute: 'look at fred',
+    factory.createTable("petShop", {
+      tableName: "petStore",
+      partitionKey: { name: "pk", type: dynamoDB.AttributeType.STRING },
+      sortKey: { name: "sk", type: dynamoDB.AttributeType.STRING },
+      timeToLiveAttribute: "look at fred",
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
 
     const template = Template.fromStack(stack);
 
-    template.resourceCountIs('AWS::DynamoDB::Table', 1);
+    template.resourceCountIs("AWS::DynamoDB::Table", 1);
 
-    template.hasResourceProperties('AWS::DynamoDB::Table', {
+    template.hasResourceProperties("AWS::DynamoDB::Table", {
       TableName: `${env}-${serviceName}-petStore`,
 
       TimeToLiveSpecification: {
-        AttributeName: 'look at fred',
+        AttributeName: "look at fred",
         Enabled: true,
       },
     });

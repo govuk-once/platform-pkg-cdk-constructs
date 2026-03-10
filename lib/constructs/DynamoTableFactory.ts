@@ -1,10 +1,10 @@
-import { Construct } from 'constructs';
-import { FactoryBase } from './FactoryBase';
-import { INamingProvider } from './namingProviders/INamingProvider';
-import * as cdk from 'aws-cdk-lib';
-import * as dynamoDB from 'aws-cdk-lib/aws-dynamodb';
-import * as kms from 'aws-cdk-lib/aws-kms';
-import * as iam from 'aws-cdk-lib/aws-iam';
+import { Construct } from "constructs";
+import { FactoryBase } from "./FactoryBase.js";
+import { INamingProvider } from "./namingProviders/INamingProvider.js";
+import * as cdk from "aws-cdk-lib";
+import * as dynamoDB from "aws-cdk-lib/aws-dynamodb";
+import * as kms from "aws-cdk-lib/aws-kms";
+import * as iam from "aws-cdk-lib/aws-iam";
 
 export type DynamoTableProperties = {
   tableName: string;
@@ -68,13 +68,13 @@ export class DynamoTableFactory
           new iam.ServicePrincipal(`logs.${this.region}.amazonaws.com`),
         ],
         actions: [
-          'kms:Encrypt',
-          'kms:Decrypt',
-          'kms:ReEncrypt*',
-          'kms:GenerateDataKey*',
-          'kms:DescribeKey',
+          "kms:Encrypt",
+          "kms:Decrypt",
+          "kms:ReEncrypt*",
+          "kms:GenerateDataKey*",
+          "kms:DescribeKey",
         ],
-        resources: ['*'],
+        resources: ["*"],
       }),
     );
 
@@ -89,7 +89,7 @@ export class DynamoTableFactory
       encryption: dynamoDB.TableEncryption.CUSTOMER_MANAGED,
       encryptionKey: encryptionKey,
 
-      timeToLiveAttribute: props.timeToLiveAttribute ?? 'TTL',
+      timeToLiveAttribute: props.timeToLiveAttribute ?? "TTL",
       stream: props.stream,
     });
 
