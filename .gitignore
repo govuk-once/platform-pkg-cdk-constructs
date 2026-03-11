@@ -1,7 +1,7 @@
 CDK.out
 .DS_Store
 cdk.out/**/*
-node_modules/**/*
+node_modules
 .git
 dist/**/*
 
