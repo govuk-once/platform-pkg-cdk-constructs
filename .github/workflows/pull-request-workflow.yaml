@@ -11,13 +11,13 @@ jobs:
   terraform-plan:
     name: Terraform Plan
     runs-on: ubuntu-latest
-    environment: sandbox
+    environment: development
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
 
       - name: Configure Aws Credentials
-        uses: aws-actions/configure-aws-credentials@v6
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_ARN }}
           aws-region: ${{ vars.AWS_REGION }}
