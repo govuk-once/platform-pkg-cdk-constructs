@@ -9,6 +9,7 @@ permissions:
 
 jobs:
   test-cdk:
+    name: Run CDK Unit Tests
     runs-on: ubuntu-latest
     steps:
       - name: checkout-code
