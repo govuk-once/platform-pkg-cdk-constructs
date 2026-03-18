@@ -92,7 +92,7 @@ describe("CloudFrontDistributionFactory", () => {
       DistributionConfig: Match.objectLike({
         DefaultRootObject: "start.html",
         Enabled: true,
-        DefaultCacheBehaviour: Match.objectLike({
+        DefaultCacheBehavior: Match.objectLike({
           ViewerProtocolPolicy: "redirect-to-https",
         }),
         Origins: Match.arrayWith([
@@ -123,7 +123,7 @@ describe("CloudFrontDistributionFactory", () => {
 
     factory.createApigatewayDistribution("testApigateway", {
       api,
-      behaviour: {
+      Behavior: {
         cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED,
       },
     });
@@ -135,7 +135,7 @@ describe("CloudFrontDistributionFactory", () => {
     template.hasResourceProperties("AWS::CloudFront::Distribution", {
       DistributionConfig: Match.objectLike({
         Enabled: true,
-        DefaultCacheBehaviour: Match.objectLike({
+        DefaultCacheBehavior: Match.objectLike({
           ViewerProtocolPolicy: "https-only",
         }),
         Origins: Match.arrayWith([
