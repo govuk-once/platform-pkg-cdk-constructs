@@ -81,7 +81,7 @@ data "aws_iam_policy_document" "domain_policy" {
     condition {
       test        = "ForAnyValue:StringLike"
       variable    = "aws:PrincipalOrgPaths"
-      ForAnyValue = var.org_paths
+      values      = var.org_paths
     }
     resources = ["*"]
     actions   = local.domain_policy_pull_actions
@@ -139,7 +139,7 @@ data "aws_iam_policy_document" "this" {
     condition {
       test        = "ForAnyValue:StringLike"
       variable    = "aws:PrincipalOrgPaths"
-      ForAnyValue = var.org_paths
+      values      = var.org_paths
     }
     resources = [aws_codeartifact_repository.this.arn]
   }
