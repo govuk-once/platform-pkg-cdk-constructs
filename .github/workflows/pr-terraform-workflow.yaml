@@ -1,7 +1,9 @@
-name: Pull Request Workflow
+name: Terraform PR
 on:
   pull_request:
     branches: [main]
+    paths:
+      - iac/**
 
 permissions:
   id-token: write
