@@ -22,7 +22,7 @@ variable "push_roles_arns" {
 }
 
 variable "org_paths" {
-  type = list(string)
-  default = []
+  type        = list(string)
+  default     = []
   description = "OrgPaths of the OUs for which read-access will be available"
 }

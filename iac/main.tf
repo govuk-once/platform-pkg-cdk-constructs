@@ -82,8 +82,8 @@ data "aws_iam_policy_document" "domain_policy" {
       type        = "AWS"
       identifiers = ["*"]
       condition {
-        test = "ForAnyValue:StringLike"
-        variable = "aws:PrincipalOrgPaths"
+        test        = "ForAnyValue:StringLike"
+        variable    = "aws:PrincipalOrgPaths"
         ForAnyValue = var.org_paths
       }
     }
@@ -142,8 +142,8 @@ data "aws_iam_policy_document" "this" {
       type        = "AWS"
       identifiers = ["*"]
       condition {
-        test = "ForAnyValue:StringLike"
-        variable = "aws:PrincipalOrgPaths"
+        test        = "ForAnyValue:StringLike"
+        variable    = "aws:PrincipalOrgPaths"
         ForAnyValue = var.org_paths
       }
     }
