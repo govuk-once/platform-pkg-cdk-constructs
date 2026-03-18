@@ -162,7 +162,7 @@ resource "aws_codeartifact_repository_permissions_policy" "this" {
   policy_document = data.aws_iam_policy_document.this.json
 }
 
-local {
+locals {
   domain_policy_pull_actions = [
     "codeartifact:DescribeDomain",
     "codeartifact:GetAuthorizationToken",
@@ -181,6 +181,5 @@ local {
     "codeartifact:ListPackageVersionDependencies",
     "codeartifact:ReadFromRepository",
     "codeartifact:GetAuthorizationToken"
-
   ]
 }
