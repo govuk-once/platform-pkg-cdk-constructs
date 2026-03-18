@@ -283,7 +283,7 @@ describe("lambdaFactory", () => {
       },
       {
         name: "table",
-        value: "testTable",
+        value: "test-table",
       },
     ]);
 
@@ -292,6 +292,6 @@ describe("lambdaFactory", () => {
 
     //the environment is set
     expect(fnVar.environment).toBe("prod");
-    expect(fnVar.table).toBe("testTable");
+    expect(fnVar.table).toBe("test-table");
   });
 });
