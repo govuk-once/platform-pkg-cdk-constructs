@@ -3,10 +3,10 @@ on:
   pull_request:
     branches: [main]
     paths: 
-      - **.ts
-      - **.json
-      - **.mts
-      - lib/**
+      - '**.ts'
+      - '**.json'
+      - '**.mts'
+      - 'lib/**'
 
 permissions:
   id-token: write
