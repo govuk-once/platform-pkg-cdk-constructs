@@ -37,7 +37,7 @@ describe("lambdaFactory", () => {
 
     lambdaFactory.createLambda("ServiceTemplateHelloFunction", {
       code: lambda.Code.fromAsset(
-        path.join(__dirname, "../testData/src/helloworld"),
+        path.join(__dirname, "../../testData/src/helloworld"),
       ),
       description: 'Displays the message "And is a goodnight from him"',
       duration: 10,
@@ -75,7 +75,7 @@ describe("lambdaFactory", () => {
 
     lambdaFactory.createLambda("ServiceTemplateHelloFunction", {
       code: lambda.Code.fromAsset(
-        path.join(__dirname, "../testData/src/helloworld"),
+        path.join(__dirname, "../../testData/src/helloworld"),
       ),
       description: 'Displays the message "And is a goodnight from him"',
       duration: 10,
@@ -107,7 +107,7 @@ describe("lambdaFactory", () => {
 
     lambdaFactory.createLambda("ServiceTemplateHelloFunction", {
       code: lambda.Code.fromAsset(
-        path.join(__dirname, "../testData/src/helloworld"),
+        path.join(__dirname, "../../testData/src/helloworld"),
       ),
       description: 'Displays the message "And is a goodnight from him"',
       duration: 10,
@@ -147,7 +147,7 @@ describe("lambdaFactory", () => {
       "ServiceTemplateHelloFunction",
       {
         code: lambda.Code.fromAsset(
-          path.join(__dirname, "../testData/src/helloworld"),
+          path.join(__dirname, "../../testData/src/helloworld"),
         ),
         description: 'Display message "Hello world"',
         duration: 10,
@@ -191,7 +191,7 @@ describe("lambdaFactory", () => {
 
     const func = lambdaFactory.createLambda("ServiceTemplateHelloFunction", {
       code: lambda.Code.fromAsset(
-        path.join(__dirname, "../testData/src/helloworld"),
+        path.join(__dirname, "../../testData/src/helloworld"),
       ),
       description: 'Displays the message "And is a goodnight from him"',
       duration: 10,
@@ -226,7 +226,7 @@ describe("lambdaFactory", () => {
 
     const func = lambdaFactory.createLambda("ServiceTemplateHelloFunction", {
       code: lambda.Code.fromAsset(
-        path.join(__dirname, "../testData/src/helloworld"),
+        path.join(__dirname, "../../testData/src/helloworld"),
       ),
       description: 'Displays the message "And is a goodnight from him"',
       duration: 10,
@@ -261,7 +261,7 @@ describe("lambdaFactory", () => {
 
     const func = lambdaFactory.createLambda("ServiceTemplateHelloFunction", {
       code: lambda.Code.fromAsset(
-        path.join(__dirname, "../testData/src/helloworld"),
+        path.join(__dirname, "../../testData/src/helloworld"),
       ),
       description: 'Displays the message "And is a goodnight from him"',
       duration: 10,
