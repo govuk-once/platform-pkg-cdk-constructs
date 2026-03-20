@@ -8,6 +8,28 @@ permissions:
   contents: read
 
 jobs:
+  test-cdk:
+    name: Run CDK Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout-code
+        uses: actions/checkout@v6
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: ".nvmrc"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: "pnpm install"
+
+      - name: Run Tests
+        run: "pnpm run test"
+
   terraform-plan:
     name: Terraform Plan
     runs-on: ubuntu-latest
@@ -30,7 +52,7 @@ jobs:
 
       - name: Initialize Terraform
         working-directory: ./iac
-        run: terraform init --backend-config=sandbox.config
+        run: terraform init --backend-config=development.config
         
       - name: Lint Terraform
         working-directory: ./iac
@@ -38,7 +60,7 @@ jobs:
 
       - name: Run Terraform Plan
         working-directory: ./iac
-        run: terraform plan --var-file=sandbox.tfvars -out=tfplan.bin
+        run: terraform plan --var-file=development.tfvars -out=tfplan.bin
 
       - name: Show Terraform Plan
         working-directory: ./iac

@@ -1,4 +1,4 @@
-name: Update Repository (Sandbox)
+name: Update Repository (Development)
 on:
   push:
     branches: [main]
@@ -17,8 +17,6 @@ jobs:
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 10
 
       - name: Setup Node
         uses: actions/setup-node@v6
@@ -45,7 +43,7 @@ jobs:
         with:
           role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_ARN }}
           aws-region: ${{ vars.AWS_REGION }}
-          role-session-name: GH-Actions-Deploy-Sandbox-Constructs
+          role-session-name: GH-Actions-Deploy-Development-Constructs
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v4
@@ -54,11 +52,11 @@ jobs:
 
       - name: Initialize Terraform
         working-directory: ./iac
-        run: terraform init --backend-config=sandbox.config
+        run: terraform init --backend-config=development.config
         
       - name: Run Terraform Plan
         working-directory: ./iac
-        run: terraform plan --var-file=sandbox.tfvars -out=tfplan.bin
+        run: terraform plan --var-file=development.tfvars -out=tfplan.bin
 
       - name: Show Terraform Plan
         working-directory: ./iac
@@ -85,7 +83,7 @@ jobs:
         with:
           role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_ARN }}
           aws-region: ${{ vars.AWS_REGION }}
-          role-session-name: GH-Actions-Deploy-Sandbox-ConstructRepo
+          role-session-name: GH-Actions-Deploy-development-ConstructRepo
 
 
       - name: Set up Terraform
@@ -95,7 +93,7 @@ jobs:
 
       - name: Initialize Terraform
         working-directory: ./iac
-        run: terraform init --backend-config=sandbox.config
+        run: terraform init --backend-config=development.config
 
       - name: Download Terraform Plan Artifact
         uses: actions/download-artifact@v5
@@ -121,15 +119,13 @@ jobs:
         with:
           role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_ARN }}
           aws-region: ${{ vars.AWS_REGION }}
-          role-session-name: GH-Actions-Deploy-Sandbox-ConstructRepo
+          role-session-name: GH-Actions-Deploy-development-ConstructRepo
 
       - name: log into codeArtifact
-        run: aws codeartifact login --tool npm --repository registry-sandbox-repo --domain registry-sandbox --domain-owner 513758042057 --region eu-west-2
+        run: aws codeartifact login --tool npm --repository registry-development-repo --domain registry-development --domain-owner 903936256209 --region eu-west-2
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 10
 
       - name: Setup node
         uses: actions/setup-node@v6
@@ -143,4 +139,3 @@ jobs:
       - name: Publish
         run: "pnpm publish --tag alpha"
 
-    

@@ -2,7 +2,7 @@ terraform {
   backend "s3" {
     bucket = "registry-terraform-storage-266cc05"
     region = "eu-west-2"
-    key    = "state/sandbox.tfstate"
+    key    = "state/development.tfstate"
   }
 }
 
