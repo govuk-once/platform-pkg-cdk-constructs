@@ -2,11 +2,11 @@ import { ServiceEnvironmentNamingProvider } from "./ServiceEnvironmentNamingProv
 import { describe, test, expect } from "vitest";
 
 describe("Environment Naming Provider", () => {
-  test("naming provider adds enviroment and service name the id", () => {
+  test("naming provider adds environment and service name the id", () => {
     const env = (
       process.env.ENVIRONMENT ??
       process.env.USER ??
-      "unkown"
+      "unknown"
     ).replace(/[^a-zA-Z0-9-]/g, "");
 
     const serviceName = "FishMaker";
@@ -17,11 +17,11 @@ describe("Environment Naming Provider", () => {
     );
   });
 
-  test("naming provider doesnt double prefix", () => {
+  test("naming provider doesn't double prefix", () => {
     const env = (
       process.env.ENVIRONMENT ??
       process.env.USER ??
-      "unkown"
+      "unknown"
     ).replace(/[^a-zA-Z0-9-]/g, "");
 
     const serviceName = "FishMaker";
@@ -34,11 +34,11 @@ describe("Environment Naming Provider", () => {
     ).toBe(`${env}-${serviceName.toLowerCase()}-fred`);
   });
 
-  test("naming provider adds enviroment and service name the id truncates to 40 characts max", () => {
+  test("naming provider adds environment and service name the id truncates to 40 chars max", () => {
     const env = (
       process.env.ENVIRONMENT ??
       process.env.USER ??
-      "unkown"
+      "unknown"
     ).replace(/[^a-zA-Z0-9-]/g, "");
 
     const serviceName = "FishMaker";
@@ -56,11 +56,11 @@ describe("Environment Naming Provider", () => {
     ).toBe(resourceId);
   });
 
-  test("naming provider adds enviroment and service name the name", () => {
+  test("naming provider adds environment and service name the name", () => {
     const env = (
       process.env.ENVIRONMENT ??
       process.env.USER ??
-      "unkown"
+      "unknown"
     ).replace(/[^a-zA-Z0-9-]/g, "");
 
     const serviceName = "FishMaker";
@@ -71,11 +71,11 @@ describe("Environment Naming Provider", () => {
     );
   });
 
-  test("naming provider adds enviroment and service name the name doesnt truncate", () => {
+  test("naming provider adds environment and service name the name doesn't truncate", () => {
     const env = (
       process.env.ENVIRONMENT ??
       process.env.USER ??
-      "unkown"
+      "unknown"
     ).replace(/[^a-zA-Z0-9-]/g, "");
 
     const serviceName = "FishMaker";

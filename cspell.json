@@ -1,0 +1,15 @@
+{
+  "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
+  "version": "0.2",
+  "import": ["@cspell/dict-en-gb/cspell-ext.json"],
+  "dictionaries": ["aws", "terraform", "slang"],
+  "language": "en,en-GB",
+  "ignorePaths": ["node_modules/**", "pnpm-lock.yaml", "package.json", "dist", "**/*.test.ts"],
+  "dictionaryDefinitions": [
+    {
+      "name": "slang",
+      "path": "./.cspell/slang.txt",
+      "addWords": true
+    }
+  ]
+}

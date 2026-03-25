@@ -7,21 +7,21 @@ export class ServiceEnvironmentNamingProvider implements INamingProvider {
     this.serviceName = serviceName ?? "service name not set";
   }
 
-  getPreFix(): string {
+  getPrefix(): string {
     const environment = this.getEnvironment();
     return `${environment}-${this.serviceName}`.toLowerCase();
   }
 
   getResourceName(name: string): string {
-    if (name && !name.startsWith(this.getPreFix())) {
-      return `${this.getPreFix()}-${name}`;
+    if (name && !name.startsWith(this.getPrefix())) {
+      return `${this.getPrefix()}-${name}`;
     }
     return name;
   }
 
   getResourceId(id?: string): string | undefined {
-    if (id && !id.startsWith(this.getPreFix())) {
-      const prefix = `${this.getPreFix()}-${id}`.toLowerCase();
+    if (id && !id.startsWith(this.getPrefix())) {
+      const prefix = `${this.getPrefix()}-${id}`.toLowerCase();
       return prefix.substring(0, 40);
     }
     return id;

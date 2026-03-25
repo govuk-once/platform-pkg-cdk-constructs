@@ -1,5 +1,5 @@
 export interface INamingProvider {
-  getPreFix(): string;
+  getPrefix(): string;
   getResourceId(id?: string): string | undefined;
   getResourceName(name: string): string;
 }

@@ -55,11 +55,11 @@ describe(`RoleHelper tests`, () => {
   beforeEach(() => {
     // const environment = getEnvironment();
     app = new App();
-    stack = new Stack(app, "teststack");
+    stack = new Stack(app, "testStack");
 
     roleHelper = new RoleHelper(stack, serviceName);
 
-    fn = new lambda.Function(stack, "testfunc", {
+    fn = new lambda.Function(stack, "testFunction", {
       runtime: lambda.Runtime.NODEJS_LATEST,
       handler: "index.handler",
       code: lambda.Code.fromInline(
@@ -75,7 +75,7 @@ describe(`RoleHelper tests`, () => {
       code: lambda.Code.fromInline("exports.handler = async () => {};"),
     });
 
-    const table = new dynamodb.Table(stack, "testTable", {
+    const table = new dynamodb.Table(stack, "test-table", {
       tableName: "customer",
       partitionKey: { name: "pk", type: dynamodb.AttributeType.STRING },
       billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
@@ -112,7 +112,7 @@ describe(`RoleHelper tests`, () => {
       code: lambda.Code.fromInline("exports.handler = async () => {};"),
     });
 
-    const table = new dynamodb.Table(stack, "testTable", {
+    const table = new dynamodb.Table(stack, "test-table", {
       tableName: "customer",
       partitionKey: { name: "pk", type: dynamodb.AttributeType.STRING },
       billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
@@ -137,7 +137,7 @@ describe(`RoleHelper tests`, () => {
 
   test("it can add read policy to an s3", () => {
     const bucket = new s3.Bucket(stack, "bucket", {
-      bucketName: "testbucket",
+      bucketName: "test-bucket",
     });
 
     roleHelper.addS3OperationPermissionsToLambda({
@@ -158,7 +158,7 @@ describe(`RoleHelper tests`, () => {
 
   test("it can add update policy to an s3", () => {
     const bucket = new s3.Bucket(stack, "bucket", {
-      bucketName: "testbucket",
+      bucketName: "test-bucket",
     });
 
     roleHelper.addS3OperationPermissionsToLambda({
@@ -179,7 +179,7 @@ describe(`RoleHelper tests`, () => {
 
   test("it can add delete policy to an s3", () => {
     const bucket = new s3.Bucket(stack, "bucket", {
-      bucketName: "testbucket",
+      bucketName: "test-bucket",
     });
 
     roleHelper.addS3OperationPermissionsToLambda({
@@ -199,7 +199,7 @@ describe(`RoleHelper tests`, () => {
 
   test("it can add create policy to an s3", () => {
     const bucket = new s3.Bucket(stack, "bucket", {
-      bucketName: "testbucket",
+      bucketName: "test-bucket",
     });
 
     roleHelper.addS3OperationPermissionsToLambda({
@@ -221,7 +221,7 @@ describe(`RoleHelper tests`, () => {
 
   test("it can add create/Read/Update/Delete policy to an s3", () => {
     const bucket = new s3.Bucket(stack, "bucket", {
-      bucketName: "testbucket",
+      bucketName: "test-bucket",
     });
 
     roleHelper.addS3OperationPermissionsToLambda({

@@ -1,7 +1,7 @@
 import { INamingProvider } from "./INamingProvider.js";
 
 export class NullNamingProvider implements INamingProvider {
-  getPreFix(): string {
+  getPrefix(): string {
     return "";
   }
 

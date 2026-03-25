@@ -27,22 +27,22 @@ Returns a restful Apigateway with an associated encrypted log group. The method 
 | **Parameter Name** | **Type** | **Function** | **Required** |
 | --- | --- | --- | --- |
 | Id  | String | An identifier that is the suffix of the resource. | YES |
-| Props | IApiGatewayRouteproperties | Details how the ApiGateway is to be configured. | YES |
+| Props | IApiGatewayRouteProperties | Details how the ApiGateway is to be configured. | YES |
 
 **Returns**: apigateway.RestApi
 
 ### Properties
 
-IApiGatewayRouteproperties informs the system how the Restful ApiGateway is to be configured:
+IApiGatewayRouteProperties informs the system how the Restful ApiGateway is to be configured:
 
 | **Parameter Name** | **Type** | **Function** | **Required** |
 | --- | --- | --- | --- |
 | cacheDurationSeconds | Number | Determines the number of seconds the result of a call to a method will be cached for/ | YES |
-| description | string | Humand readable description of the purpose of the Api is | YES |
+| description | string | Human readable description of the purpose of the Api is | YES |
 | Key | aws_kms key | Used to encrypt the log group | YES |
-| name | String | The name of the ApiGateway. This will be prefixed according to the namingprovider | YES |
-| retensionDays | aws-log RetentionDays | Determines how long the logs will be stored for. Defaults to Two weeks | NO  |
-| domainName | Apigayeway DomainNameOptions | Allows the ApiGameway to receive a route53 entry | NO  |
+| name | String | The name of the ApiGateway. This will be prefixed according to the NamingProvider | YES |
+| retentionDays | aws-log RetentionDays | Determines how long the logs will be stored for. Defaults to Two weeks | NO  |
+| domainName | ApiGateway DomainNameOptions | Allows the ApiGateway to receive a route53 entry | NO  |
 
 ### setDefaultAuthorisation
 
@@ -70,8 +70,8 @@ Accepts two parameters:
 
 | **Parameter Name** | **Type** | **Function** | **Required** |
 | --- | --- | --- | --- |
-| authoriser | Apigateway IAuthorizer | The opbject that provide the authorisation | YES |
-| acopes | An array of strings | An array of scope names | NO  |
+| authoriser | Apigateway IAuthorizer | The object that provide the authorisation | YES |
+| scopes | An array of strings | An array of scope names | NO  |
 
 **Returns**: void
 
@@ -83,7 +83,7 @@ Accepts two parameters:
 
 | **Parameter Name** | **Type** | **Function** | **Required** |
 | --- | --- | --- | --- |
-| authoriser | Apigateway IAuthorizer | The opbject that provide the authorisation | YES |
+| authoriser | Apigateway IAuthorizer | The object that provide the authorisation | YES |
 | scopes | An array of strings | An array of scope names | NO  |
 
 **Returns**: void
@@ -96,17 +96,17 @@ Accepts one parameters:
 
 | **Parameter Name** | **Type** | **Function** | **Required** |
 | --- | --- | --- | --- |
-| authoriser | Apigateway IAuthorizer | The opbject that provide the authorisation | YES |
+| authoriser | Apigateway IAuthorizer | The object that provide the authorisation | YES |
 
 **Returns**: void
 
 ### createAuthorisation
 
-A helper method to create an IAuthorisor based on the configuration that it is passed.
+A helper method to create an IAuthorizer based on the configuration that it is passed.
 
 Flow for use if creating default Cognito authorisation: createAuthorisation-> [enableCognitoAuthorisation](#_enableCognitoAuthorisation)\-> addRoute
 
-If the congig.type equals "cogniteo" then a cogniteo authoriser is created otherwise a TokenAuthorizer is created.
+If the config.type equals "cognito" then a cognito authoriser is created otherwise a TokenAuthorizer is created.
 
 Accepts three parameters:
 
@@ -116,7 +116,7 @@ Accepts three parameters:
 | Config | [AuthoriserConfig](#_Config_Parameters) | Details of how the authorise should be built | YES |
 | Api | apiGateway RestApi | The Restful Apigateway to be associated with the authorisation | YES |
 
-**Returns**: apigateway. IAuthorisor
+**Returns**: apigateway. IAuthorizer
 
 ### Config Parameters
 
@@ -124,11 +124,11 @@ Configuration is a union of two types:
 
 #### Cognito configuration
 
-<div class="joplin-table-wrapper"><table><tbody><tr><th><p><strong>Parameter Name</strong></p></th><th><p><strong>Type</strong></p></th><th><p><strong>Function</strong></p></th><th><p><strong>Required</strong></p></th></tr><tr><td><p>Type</p></td><td><p>string</p></td><td><p>Determine which authorisor to be built:</p><ul><li>cognito: builds a cognito authorisor</li><li>lambda: build a lambdaToken authoriser<br></li></ul></td><td><p>YES</p></td></tr><tr><td><p>userPools</p></td><td><p>An array of Cognito.IUserPool</p></td><td><p>Details of the users pools associated with the authorisor</p></td><td><p>YES</p></td></tr><tr><td><p>identitySource</p></td><td><p>String</p></td><td><p>Where the token is located in the request. If not ser defaults to Authorization header</p></td><td><p>NO</p></td></tr><tr><td><p>resultsCacheTtlSeconds</p></td><td><p>Number</p></td><td><p>How many second the result of the authorisation is cached for.</p></td><td><p>NO</p></td></tr></tbody></table></div>
+<div class="joplin-table-wrapper"><table><tbody><tr><th><p><strong>Parameter Name</strong></p></th><th><p><strong>Type</strong></p></th><th><p><strong>Function</strong></p></th><th><p><strong>Required</strong></p></th></tr><tr><td><p>Type</p></td><td><p>string</p></td><td><p>Determine which authorizer to be built:</p><ul><li>cognito: builds a cognito authorizer</li><li>lambda: build a lambdaToken authoriser<br></li></ul></td><td><p>YES</p></td></tr><tr><td><p>userPools</p></td><td><p>An array of Cognito.IUserPool</p></td><td><p>Details of the users pools associated with the authorizer</p></td><td><p>YES</p></td></tr><tr><td><p>identitySource</p></td><td><p>String</p></td><td><p>Where the token is located in the request. If not ser defaults to Authorization header</p></td><td><p>NO</p></td></tr><tr><td><p>resultsCacheTtlSeconds</p></td><td><p>Number</p></td><td><p>How many second the result of the authorisation is cached for.</p></td><td><p>NO</p></td></tr></tbody></table></div>
 
 #### Lambda configuration
 
-<div class="joplin-table-wrapper"><table><tbody><tr><th><p><strong>Parameter Name</strong></p></th><th><p><strong>Type</strong></p></th><th><p><strong>Function</strong></p></th><th><p><strong>Required</strong></p></th></tr><tr><td><p>Type</p></td><td><p>string</p></td><td><p>Determine which authorisor to be built:</p><ul><li>cognito: builds a cognito authorisor</li><li>lambda: build a lambdaToken authoriser<br></li></ul></td><td><p>YES</p></td></tr><tr><td><p>Lambda</p></td><td><p>Lambda.IFunction</p></td><td><p>The lambda function that provide the custom functionality</p></td><td><p>YES</p></td></tr><tr><td><p>identitySource</p></td><td><p>String</p></td><td><p>Where the token is located in the request. If not ser defaults to Authorization header</p></td><td><p>NO</p></td></tr><tr><td><p>resultsCacheTtlSeconds</p></td><td><p>Number</p></td><td><p>How many second the result of the authorisation is cached for.</p></td><td><p>NO</p></td></tr><tr><td><p>validationRegex</p></td><td><p>string</p></td><td><p>A regular expression to validate the identity</p></td><td><p>NO</p></td></tr></tbody></table></div>
+<div class="joplin-table-wrapper"><table><tbody><tr><th><p><strong>Parameter Name</strong></p></th><th><p><strong>Type</strong></p></th><th><p><strong>Function</strong></p></th><th><p><strong>Required</strong></p></th></tr><tr><td><p>Type</p></td><td><p>string</p></td><td><p>Determine which authorizer to be built:</p><ul><li>cognito: builds a cognito authorizer</li><li>lambda: build a lambdaToken authoriser<br></li></ul></td><td><p>YES</p></td></tr><tr><td><p>Lambda</p></td><td><p>Lambda.IFunction</p></td><td><p>The lambda function that provide the custom functionality</p></td><td><p>YES</p></td></tr><tr><td><p>identitySource</p></td><td><p>String</p></td><td><p>Where the token is located in the request. If not ser defaults to Authorization header</p></td><td><p>NO</p></td></tr><tr><td><p>resultsCacheTtlSeconds</p></td><td><p>Number</p></td><td><p>How many second the result of the authorisation is cached for.</p></td><td><p>NO</p></td></tr><tr><td><p>validationRegex</p></td><td><p>string</p></td><td><p>A regular expression to validate the identity</p></td><td><p>NO</p></td></tr></tbody></table></div>
 
 ### addRoute
 

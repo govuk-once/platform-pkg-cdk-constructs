@@ -23,14 +23,14 @@ const getDashboardBody = (template: Template): any => {
   return JSON.stringify(first.Properties.DashboardBody);
 };
 
-const expectAllConatined = (source: string, expected: string[]): void => {
+const expectAllContained = (source: string, expected: string[]): void => {
   expected.forEach((testItem) => expect(source).toContain(testItem));
 };
 
 describe(" Standard Dashboard", () => {
   test("creates a dashboard with the provided name", () => {
     const app = new App();
-    const stack = new Stack(app, "teststack");
+    const stack = new Stack(app, "testStack");
 
     const factory = new StandardServiceDashboardFactory(stack, serviceName);
 
@@ -54,7 +54,7 @@ describe(" Standard Dashboard", () => {
 
   test("creates a dashboard with an api gateway", () => {
     const app = new App();
-    const stack = new Stack(app, "teststack");
+    const stack = new Stack(app, "testStack");
 
     const logKey = new keys.Key(stack, "testKeyOne");
 
@@ -73,7 +73,7 @@ describe(" Standard Dashboard", () => {
       name: "testApiTwo",
     });
 
-    const fn = new lambda.Function(stack, "testfunc", {
+    const fn = new lambda.Function(stack, "testFunction", {
       runtime: lambda.Runtime.NODEJS_LATEST,
       handler: "index.handler",
       code: lambda.Code.fromInline(
@@ -104,14 +104,14 @@ describe(" Standard Dashboard", () => {
     const template = Template.fromStack(stack);
     const dashBody = getDashboardBody(template);
 
-    expectAllConatined(dashBody, [
+    expectAllContained(dashBody, [
       `${preFix}-testApiOne - Requests and Latency`,
       `${preFix}-testApiTwo - Requests and Latency`,
       `${preFix}-testApiOne - 4xx / 5xx Errors`,
       `${preFix}-testApiTwo - 4xx / 5xx Errors`,
     ]);
 
-    expectAllConatined(dashBody, [
+    expectAllContained(dashBody, [
       "AWS/ApiGateway",
       "Count",
       "Latency",
@@ -120,11 +120,11 @@ describe(" Standard Dashboard", () => {
     ]);
   });
 
-  test("creates a dashboard with an lambda", () => {
+  test("creates a dashboard with a lambda", () => {
     const app = new App();
-    const stack = new Stack(app, "teststack");
+    const stack = new Stack(app, "testStack");
 
-    const fnOne = new lambda.Function(stack, "testfuncOne", {
+    const fnOne = new lambda.Function(stack, "test-function-one", {
       functionName: "fnOne",
       runtime: lambda.Runtime.NODEJS_LATEST,
       handler: "index.handler",
@@ -133,7 +133,7 @@ describe(" Standard Dashboard", () => {
       ),
     });
 
-    const fnTwo = new lambda.Function(stack, "testfuncTwo", {
+    const fnTwo = new lambda.Function(stack, "test-function-two", {
       functionName: "fnTwo",
       runtime: lambda.Runtime.NODEJS_LATEST,
       handler: "index.handler",
@@ -156,14 +156,14 @@ describe(" Standard Dashboard", () => {
     const template = Template.fromStack(stack);
     const dashBody = getDashboardBody(template);
 
-    expectAllConatined(dashBody, [
+    expectAllContained(dashBody, [
       "Invocations (sum) and Durations (average ms)",
       "Errors and Throttles",
-      "testfuncOne",
-      "testfuncTwo",
+      "testfunctionone",
+      "testfunctiontwo",
     ]);
 
-    expectAllConatined(dashBody, [
+    expectAllContained(dashBody, [
       "AWS/Lambda",
       "Invocations",
       "Errors",
@@ -174,7 +174,7 @@ describe(" Standard Dashboard", () => {
 
   test("creates a dashboard with an Dynamo", () => {
     const app = new App();
-    const stack = new Stack(app, "teststack");
+    const stack = new Stack(app, "test-stack");
 
     const tableOne = new dynamo.Table(stack, "TableOne", {
       tableName: "tableOne",
@@ -200,14 +200,14 @@ describe(" Standard Dashboard", () => {
     const template = Template.fromStack(stack);
     const dashBody = getDashboardBody(template);
 
-    expectAllConatined(dashBody, [
+    expectAllContained(dashBody, [
       "Consumed RCU / WCU",
       "Throttles",
       "TableOne",
       "TableTwo",
     ]);
 
-    expectAllConatined(dashBody, [
+    expectAllContained(dashBody, [
       "AWS/DynamoDB",
       "ConsumedReadCapacityUnits",
       "ConsumedWriteCapacityUnits",

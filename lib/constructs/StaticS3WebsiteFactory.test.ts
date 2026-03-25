@@ -7,7 +7,7 @@ import { NullNamingProvider } from "./namingProviders/NullNamingProvider.js";
 
 describe("StaticS3Website", () => {
   const serviceName = "S3BucketService";
-  const env = (process.env.ENVIRONMENT ?? process.env.USER ?? "unkown").replace(
+  const env = (process.env.ENVIRONMENT ?? process.env.USER ?? "unknown").replace(
     /[^a-zA-Z0-9-]/g,
     "",
   );

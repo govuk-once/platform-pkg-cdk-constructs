@@ -1,7 +1,7 @@
 data "aws_caller_identity" "current" {}
 
 resource "aws_kms_key" "this" {
-  description             = "Symmetric key to encrypt codearfifact data"
+  description             = "Symmetric key to encrypt code-artifact data"
   enable_key_rotation     = true
   deletion_window_in_days = 20
 }

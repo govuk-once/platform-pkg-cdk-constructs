@@ -16,7 +16,7 @@ describe("Apigateway factory", () => {
   let lambdaRoute: ILambdaRoute;
 
   const serviceName = "ApiService";
-  const env = (process.env.ENVIRONMENT ?? process.env.USER ?? "unkown").replace(
+  const env = (process.env.ENVIRONMENT ?? process.env.USER ?? "unknown").replace(
     /[^a-zA-Z0-9-]/g,
     "",
   );
@@ -26,9 +26,9 @@ describe("Apigateway factory", () => {
     localApp = new App();
     localStack = new Stack(localApp, "testApi");
 
-    localLogKey = new aws_kms.Key(localStack, "testkey", {});
+    localLogKey = new aws_kms.Key(localStack, "testKey", {});
 
-    const fn = new lambda.Function(localStack, "testfunc", {
+    const fn = new lambda.Function(localStack, "test-function", {
       runtime: lambda.Runtime.NODEJS_LATEST,
       handler: "index.handler",
       code: lambda.Code.fromInline(
@@ -46,7 +46,7 @@ describe("Apigateway factory", () => {
   });
 
   test("creates a Gateway service naming provider", () => {
-    const api = apiFactory.createApiGatewayRouter("myapi", {
+    const api = apiFactory.createApiGatewayRouter("myApi", {
       cacheDurationSeconds: 10,
       description: "test",
       key: localLogKey,
@@ -70,9 +70,9 @@ describe("Apigateway factory", () => {
     localApp = new App();
     localStack = new Stack(localApp, "testApi");
 
-    localLogKey = new aws_kms.Key(localStack, "testkey", {});
+    localLogKey = new aws_kms.Key(localStack, "testKey", {});
 
-    const localFfn = new lambda.Function(localStack, "testfunc", {
+    const localFfn = new lambda.Function(localStack, "testFunction", {
       runtime: lambda.Runtime.NODEJS_LATEST,
       handler: "index.handler",
       code: lambda.Code.fromInline(
@@ -92,7 +92,7 @@ describe("Apigateway factory", () => {
       new NullNamingProvider(),
     );
 
-    const api = factory.createApiGatewayRouter("myapi", {
+    const api = factory.createApiGatewayRouter("myApi", {
       cacheDurationSeconds: 10,
       description: "test",
       key: localLogKey,
@@ -111,7 +111,7 @@ describe("Apigateway factory", () => {
   });
 
   test("can create a RestApi with method", () => {
-    const api = apiFactory.createApiGatewayRouter("myapi", {
+    const api = apiFactory.createApiGatewayRouter("myApi", {
       cacheDurationSeconds: 10,
       description: "test",
       key: localLogKey,
@@ -132,7 +132,7 @@ describe("Apigateway factory", () => {
   });
 
   test("can create a RestApi with default IAM auth", () => {
-    const api = apiFactory.createApiGatewayRouter("myapi", {
+    const api = apiFactory.createApiGatewayRouter("myApi", {
       cacheDurationSeconds: 10,
       description: "test",
       key: localLogKey,
@@ -150,8 +150,8 @@ describe("Apigateway factory", () => {
     });
   });
 
-  test("can allow per route authorisation overrieds", () => {
-    const api = apiFactory.createApiGatewayRouter("myapi", {
+  test("can allow per route authorisation overrides", () => {
+    const api = apiFactory.createApiGatewayRouter("myApi", {
       cacheDurationSeconds: 10,
       description: "test",
       key: localLogKey,
@@ -173,15 +173,15 @@ describe("Apigateway factory", () => {
   });
 
   test("can create a RestApi with default Cognito auth", () => {
-    const api = apiFactory.createApiGatewayRouter("myapi", {
+    const api = apiFactory.createApiGatewayRouter("myApi", {
       cacheDurationSeconds: 10,
       description: "test",
       key: localLogKey,
       name: "myApi",
     });
 
-    const auth = apiFactory.createAuthorisor(
-      "CognitoAuthorisor",
+    const auth = apiFactory.createAuthorizer(
+      "CognitoAuthorizer",
       {
         type: "cognito",
         userPools: [new cognito.UserPool(localStack, "UserPool")],

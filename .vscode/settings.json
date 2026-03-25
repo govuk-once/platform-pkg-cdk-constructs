@@ -1,0 +1,5 @@
+{
+  "cSpell.import": ["@cspell/dict-en-gb/cspell-ext.json"],
+  "cSpell.language": "en-GB",
+  "cSpell.dictionaries": ["aws", "terraform"]
+}

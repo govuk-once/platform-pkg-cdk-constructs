@@ -1,4 +1,4 @@
-# CloudFrontdistribution Factory
+# CloudFrontDistribution Factory
 
 ## Description
 
@@ -16,7 +16,7 @@ The constructor has three parameters:
 | serviceName | String | The name of the service which this resource is a part of | YES |
 | namingProvider | INamingProvider | Creates a standardized pre-fix for object identifiers and names | NO |
 
-**Returns**: CloudFrontdistributionFactory
+**Returns**: CloudFrontDistributionFactory
 
 ---
 
@@ -29,7 +29,7 @@ Creates a CloudFront distribution specifically optimized for an S3 bucket origin
 | **Parameter Name** | **Type** | **Function** | **Required** |
 | --- | --- | --- | --- |
 | id | String | An identifier that is the suffix of the resource | YES |
-| props | [ICloudFrontdistributionS3Properties](#ICloudFrontdistributionS3Properties) | Configuration details for the S3 distribution | YES |
+| props | [ICloudFrontDistributionS3Properties](#ICloudFrontDistributionS3Properties) | Configuration details for the S3 distribution | YES |
 
 **Returns**: cloudfront.Distribution
 
@@ -40,7 +40,7 @@ Creates a CloudFront distribution optimized for a RestApi origin. It automatical
 | **Parameter Name** | **Type** | **Function** | **Required** |
 | --- | --- | --- | --- |
 | id | String | An identifier that is the suffix of the resource | YES |
-| props | [ICloudFrontdistributionApigatewayProperties](#ICloudFrontdistributionApigatewayProperties) | Configuration details for the API Gateway distribution | YES |
+| props | [ICloudFrontDistributionApigatewayProperties](#ICloudFrontDistributionApigatewayProperties) | Configuration details for the API Gateway distribution | YES |
 
 **Returns**: cloudfront.Distribution
 
@@ -48,7 +48,7 @@ Creates a CloudFront distribution optimized for a RestApi origin. It automatical
 
 ## Properties
 
-### ICloudFrontdistributionProperties (Base)
+### ICloudFrontDistributionProperties (Base)
 
 These properties are shared by both S3 and API Gateway distribution methods:
 
@@ -61,9 +61,9 @@ These properties are shared by both S3 and API Gateway distribution methods:
 | behavior | Partial<BehaviorOptions> | Overrides for the default behavior | NO |
 | distribution | Omit<DistributionProps> | Overrides for the distribution level properties | NO |
 
-### ICloudFrontdistributionS3Properties
+### ICloudFrontDistributionS3Properties
 
-Inherits from [Base Properties](#ICloudFrontdistributionProperties-Base).
+Inherits from [Base Properties](#ICloudFrontDistributionProperties-Base).
 
 | **Parameter Name** | **Type** | **Function** | **Required** |
 | --- | --- | --- | --- |
@@ -74,9 +74,9 @@ Inherits from [Base Properties](#ICloudFrontdistributionProperties-Base).
 | errorResponses | cloudfront.ErrorResponse[] | Custom error pages (e.g., for SPAs) | NO |
 | comment | string | Description for the distribution | NO |
 
-### ICloudFrontdistributionApigatewayProperties
+### ICloudFrontDistributionApigatewayProperties
 
-Inherits from [Base Properties](#ICloudFrontdistributionProperties-Base).
+Inherits from [Base Properties](#ICloudFrontDistributionProperties-Base).
 
 | **Parameter Name** | **Type** | **Function** | **Required** |
 | --- | --- | --- | --- |
@@ -91,11 +91,11 @@ Inherits from [Base Properties](#ICloudFrontdistributionProperties-Base).
 ```typescript
 import { App, Stack } from "aws-cdk-lib";
 import * as s3 from "aws-cdk-lib/aws-s3";
-import { CloudFrontdistributionFactory } from "./factories/CloudFrontdistributionFactory";
+import { CloudFrontDistributionFactory } from "./factories/CloudFrontDistributionFactory";
 
 const app = new App();
 const stack = new Stack(app, "WebStack");
-const factory = new CloudFrontdistributionFactory(stack, "MyService");
+const factory = new CloudFrontDistributionFactory(stack, "MyService");
 
 const websiteBucket = s3.Bucket.fromBucketName(stack, "SourceBucket", "my-web-assets");
 

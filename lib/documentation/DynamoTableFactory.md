@@ -51,7 +51,7 @@ Informs the system how the DynamoDB table and its secondary indexes should be co
 | key | kms.IKey | Custom KMS key for encryption. Creates new if not provided | NO |
 | timeToLiveAttribute | String | Attribute name for TTL. Defaults to 'TTL' | NO |
 | stream | StreamViewType | Determines if/how the table sends changes to a stream | NO |
-| globalSecodaryIndexes | Array | Configuration for Global Secondary Indexes (GSI) | NO |
+| globalSecondaryIndexes | Array | Configuration for Global Secondary Indexes (GSI) | NO |
 | localSecondaryIndexes | Array | Configuration for Local Secondary Indexes (LSI) | NO |
 
 ---
@@ -72,7 +72,7 @@ const table = factory.createTable("ProductTable", {
   tableName: "Products",
   partitionKey: { name: "pk", type: dynamoDB.AttributeType.STRING },
   sortKey: { name: "sk", type: dynamoDB.AttributeType.STRING },
-  globalSecodaryIndexes: [
+  globalSecondaryIndexes: [
     {
       indexName: "GSI1",
       partitionKey: { name: "GSI1_pk", type: dynamoDB.AttributeType.STRING },

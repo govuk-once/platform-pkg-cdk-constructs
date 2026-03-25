@@ -68,7 +68,7 @@ export class CloudFrontDistributionFactory extends FactoryBase {
       },
     );
 
-    const defaultBehavior: cloudfront.BehaviorOptions = this.createBehaviourS3(
+    const defaultBehavior: cloudfront.BehaviorOptions = this.createBehaviorS3(
       origin,
       props,
     );
@@ -104,7 +104,7 @@ export class CloudFrontDistributionFactory extends FactoryBase {
       protocolPolicy: cloudfront.OriginProtocolPolicy.HTTPS_ONLY,
     });
 
-    const defaultBehavior: cloudfront.BehaviorOptions = this.createBehaviourApi(
+    const defaultBehavior: cloudfront.BehaviorOptions = this.createBehaviorApi(
       origin,
       props,
     );
@@ -134,7 +134,7 @@ export class CloudFrontDistributionFactory extends FactoryBase {
       : {};
   }
 
-  private createBehaviourS3(
+  private createBehaviorS3(
     origin: cdk.aws_cloudfront.IOrigin,
     props: ICloudFrontDistributionS3Properties,
   ): cdk.aws_cloudfront.BehaviorOptions {
@@ -148,7 +148,7 @@ export class CloudFrontDistributionFactory extends FactoryBase {
     };
   }
 
-  private createBehaviourApi(
+  private createBehaviorApi(
     origin: cdk.aws_cloudfront.IOrigin,
     props: ICloudFrontDistributionApigatewayProperties,
   ): cdk.aws_cloudfront.BehaviorOptions {

@@ -31,9 +31,9 @@ describe("lambdaFactory", () => {
 
   test("creates a lambda service naming provider", () => {
     const app = new App();
-    const stack = new Stack(app, "tsetLambda");
+    const stack = new Stack(app, "testLambda");
     const lambdaFactory = new LambdaFactory(stack, serviceName);
-    const logKey = new aws_kms.Key(stack, "testkey", {});
+    const logKey = new aws_kms.Key(stack, "testKey", {});
 
     lambdaFactory.createLambda("ServiceTemplateHelloFunction", {
       code: lambda.Code.fromInline(
@@ -63,15 +63,15 @@ describe("lambdaFactory", () => {
     );
   });
 
-  test("creates a lambda overriden naming provider", () => {
+  test("creates a lambda overridden naming provider", () => {
     const app = new App();
-    const stack = new Stack(app, "tsetLambda");
+    const stack = new Stack(app, "testLambda");
     const lambdaFactory = new LambdaFactory(
       stack,
       serviceName,
       new NullNamingProvider(),
     );
-    const logKey = new aws_kms.Key(stack, "testkey", {});
+    const logKey = new aws_kms.Key(stack, "testKey", {});
 
     lambdaFactory.createLambda("ServiceTemplateHelloFunction", {
       code: lambda.Code.fromInline(
@@ -101,9 +101,9 @@ describe("lambdaFactory", () => {
 
   test('Creates a "sweet Good Night Function"', () => {
     const app = new App();
-    const stack = new Stack(app, "tsetLambda");
+    const stack = new Stack(app, "testLambda");
     const lambdaFactory = new LambdaFactory(stack, serviceName);
-    const logKey = new aws_kms.Key(stack, "testkey", {});
+    const logKey = new aws_kms.Key(stack, "testKey", {});
 
     lambdaFactory.createLambda("ServiceTemplateHelloFunction", {
       code: lambda.Code.fromInline(
@@ -139,9 +139,9 @@ describe("lambdaFactory", () => {
   });
   test('Creates a "hello world function with routing data"', () => {
     const app = new App();
-    const stack = new Stack(app, "tsetLambda");
+    const stack = new Stack(app, "testLambda");
     const lambdaFactory = new LambdaFactory(stack, serviceName);
-    const logKey = new aws_kms.Key(stack, "testkey", {});
+    const logKey = new aws_kms.Key(stack, "testKey", {});
 
     const lambdaRoute = lambdaFactory.createLambdaWithApiRoute(
       "ServiceTemplateHelloFunction",
@@ -185,9 +185,9 @@ describe("lambdaFactory", () => {
 
   test("creates a lambda service and adds a variable", () => {
     const app = new App();
-    const stack = new Stack(app, "tsetLambda");
+    const stack = new Stack(app, "testLambda");
     const lambdaFactory = new LambdaFactory(stack, serviceName);
-    const logKey = new aws_kms.Key(stack, "testkey", {});
+    const logKey = new aws_kms.Key(stack, "testKey", {});
 
     const func = lambdaFactory.createLambda("ServiceTemplateHelloFunction", {
       code: lambda.Code.fromInline(
@@ -220,9 +220,9 @@ describe("lambdaFactory", () => {
 
   test("creates a lambda service and adds a variable", () => {
     const app = new App();
-    const stack = new Stack(app, "tsetLambda");
+    const stack = new Stack(app, "testLambda");
     const lambdaFactory = new LambdaFactory(stack, serviceName);
-    const logKey = new aws_kms.Key(stack, "testkey", {});
+    const logKey = new aws_kms.Key(stack, "testKey", {});
 
     const func = lambdaFactory.createLambda("ServiceTemplateHelloFunction", {
       code: lambda.Code.fromInline(
@@ -255,9 +255,9 @@ describe("lambdaFactory", () => {
 
   test("creates a lambda service and adds multiple variable", () => {
     const app = new App();
-    const stack = new Stack(app, "tsetLambda");
+    const stack = new Stack(app, "testLambda");
     const lambdaFactory = new LambdaFactory(stack, serviceName);
-    const logKey = new aws_kms.Key(stack, "testkey", {});
+    const logKey = new aws_kms.Key(stack, "testKey", {});
 
     const func = lambdaFactory.createLambda("ServiceTemplateHelloFunction", {
       code: lambda.Code.fromInline(
@@ -283,7 +283,7 @@ describe("lambdaFactory", () => {
       },
       {
         name: "table",
-        value: "testtable",
+        value: "test-table",
       },
     ]);
 
@@ -292,6 +292,6 @@ describe("lambdaFactory", () => {
 
     //the environment is set
     expect(fnVar.environment).toBe("prod");
-    expect(fnVar.table).toBe("testtable");
+    expect(fnVar.table).toBe("test-table");
   });
 });

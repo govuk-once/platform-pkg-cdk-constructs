@@ -2,11 +2,11 @@ import { NullNamingProvider } from "./NullNamingProvider.js";
 import { describe, test, expect } from "vitest";
 
 describe("Null Naming Provider", () => {
-  test("naming provider doesnt amend the id", () => {
+  test("naming provider doesn't amend the id", () => {
     const env = (
       process.env.ENVIRONMENT ??
       process.env.USER ??
-      "unkown"
+      "unknown"
     ).replace(/[^a-zA-Z0-9-]/g, "");
 
     const namingProvider = new NullNamingProvider();
@@ -14,11 +14,11 @@ describe("Null Naming Provider", () => {
     expect(namingProvider.getResourceId("fred")).not.toContain(env);
   });
 
-  test("naming provider doesnt amend the name", () => {
+  test("naming provider doesn't amend the name", () => {
     const env = (
       process.env.ENVIRONMENT ??
       process.env.USER ??
-      "unkown"
+      "unknown"
     ).replace(/[^a-zA-Z0-9-]/g, "");
 
     const namingProvider = new NullNamingProvider();

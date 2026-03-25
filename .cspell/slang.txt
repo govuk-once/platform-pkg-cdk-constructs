@@ -1,0 +1,8 @@
+certificatearnregional
+hostedzoneid
+hostedzonename
+certificatemanager
+PITR
+npmjs
+codeartifact
+esbuild

@@ -9,11 +9,12 @@ import { DynamoTableFactory } from "./DynamoTableFactory.js";
 import { NullNamingProvider } from "./namingProviders/NullNamingProvider.js";
 
 describe("DynamoTableFactory", () => {
-  const env = (process.env.ENVIRONMENT ?? process.env.USER ?? "unkown").replace(
-    /[^a-zA-Z0-9-]/g,
-    "",
-  );
-  const serviceName = "databaseservice";
+  const env = (
+    process.env.ENVIRONMENT ??
+    process.env.USER ??
+    "unknown"
+  ).replace(/[^a-zA-Z0-9-]/g, "");
+  const serviceName = "database-service";
 
   test("creates a S3 Distribution using service naming provider", () => {
     const app = new App();
@@ -22,7 +23,7 @@ describe("DynamoTableFactory", () => {
     const factory = new DynamoTableFactory(stack, "eu-west", serviceName);
 
     factory.createTable("petShop", {
-      tableName: "petStore",
+      tableName: "pet-store",
       partitionKey: { name: "pk", type: dynamoDB.AttributeType.STRING },
       sortKey: { name: "sk", type: dynamoDB.AttributeType.STRING },
       removalPolicy: cdk.RemovalPolicy.DESTROY,
@@ -37,7 +38,7 @@ describe("DynamoTableFactory", () => {
     expect(JSON.stringify(template).includes(serviceName)).toBe(true);
 
     template.hasResourceProperties("AWS::DynamoDB::Table", {
-      TableName: `${env}-${serviceName}-petStore`,
+      TableName: `${env}-${serviceName}-pet-store`,
 
       KeySchema: Match.arrayWith([
         Match.objectLike({ AttributeName: "pk", KeyType: "HASH" }),
@@ -73,7 +74,7 @@ describe("DynamoTableFactory", () => {
     );
 
     factory.createTable("petShop", {
-      tableName: "petStore",
+      tableName: "pet-store",
       partitionKey: { name: "pk", type: dynamoDB.AttributeType.STRING },
       sortKey: { name: "sk", type: dynamoDB.AttributeType.STRING },
       removalPolicy: cdk.RemovalPolicy.DESTROY,
@@ -95,7 +96,7 @@ describe("DynamoTableFactory", () => {
     const factory = new DynamoTableFactory(stack, "eu-west", serviceName);
 
     factory.createTable("petShop", {
-      tableName: "petStore",
+      tableName: "pet-store",
       partitionKey: { name: "pk", type: dynamoDB.AttributeType.STRING },
       sortKey: { name: "sk", type: dynamoDB.AttributeType.STRING },
       removalPolicy: cdk.RemovalPolicy.DESTROY,
@@ -107,7 +108,7 @@ describe("DynamoTableFactory", () => {
     template.resourceCountIs("AWS::DynamoDB::Table", 1);
 
     template.hasResourceProperties("AWS::DynamoDB::Table", {
-      TableName: `${env}-${serviceName}-petStore`,
+      TableName: `${env}-${serviceName}-pet-store`,
 
       KeySchema: Match.arrayWith([
         Match.objectLike({ AttributeName: "pk", KeyType: "HASH" }),
@@ -142,7 +143,7 @@ describe("DynamoTableFactory", () => {
     const factory = new DynamoTableFactory(stack, "eu-west", serviceName);
 
     factory.createTable("petShop", {
-      tableName: "petStore",
+      tableName: "pet-store",
       partitionKey: { name: "pk", type: dynamoDB.AttributeType.STRING },
       sortKey: { name: "sk", type: dynamoDB.AttributeType.STRING },
       key: encryptionKey,
@@ -155,7 +156,7 @@ describe("DynamoTableFactory", () => {
     template.resourceCountIs("AWS::DynamoDB::Table", 1);
 
     template.hasResourceProperties("AWS::DynamoDB::Table", {
-      TableName: `${env}-${serviceName}-petStore`,
+      TableName: `${env}-${serviceName}-pet-store`,
 
       SSESpecification: {
         SSEEnabled: true,
@@ -172,7 +173,7 @@ describe("DynamoTableFactory", () => {
     const factory = new DynamoTableFactory(stack, "eu-west", serviceName);
 
     factory.createTable("petShop", {
-      tableName: "petStore",
+      tableName: "pet-store",
       partitionKey: { name: "pk", type: dynamoDB.AttributeType.STRING },
       sortKey: { name: "sk", type: dynamoDB.AttributeType.STRING },
       stream: dynamoDB.StreamViewType.NEW_AND_OLD_IMAGES,
@@ -187,7 +188,7 @@ describe("DynamoTableFactory", () => {
     template.resourceCountIs("AWS::DynamoDB::Table", 1);
 
     template.hasResourceProperties("AWS::DynamoDB::Table", {
-      TableName: `${env}-${serviceName}-petStore`,
+      TableName: `${env}-${serviceName}-pet-store`,
 
       PointInTimeRecoverySpecification: {
         PointInTimeRecoveryEnabled: false,
@@ -206,7 +207,7 @@ describe("DynamoTableFactory", () => {
     const factory = new DynamoTableFactory(stack, "eu-west", serviceName);
 
     factory.createTable("petShop", {
-      tableName: "petStore",
+      tableName: "pet-store",
       partitionKey: { name: "pk", type: dynamoDB.AttributeType.STRING },
       sortKey: { name: "sk", type: dynamoDB.AttributeType.STRING },
       timeToLiveAttribute: "look at fred",
@@ -218,7 +219,7 @@ describe("DynamoTableFactory", () => {
     template.resourceCountIs("AWS::DynamoDB::Table", 1);
 
     template.hasResourceProperties("AWS::DynamoDB::Table", {
-      TableName: `${env}-${serviceName}-petStore`,
+      TableName: `${env}-${serviceName}-pet-store`,
 
       TimeToLiveSpecification: {
         AttributeName: "look at fred",
