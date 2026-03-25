@@ -9,7 +9,7 @@ import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as logs from "aws-cdk-lib/aws-logs";
 
 class constants {
-  static readonly RETENTIONDAYS: logs.RetentionDays.TWO_WEEKS;
+  static readonly RETENTION_DAYS: logs.RetentionDays.TWO_WEEKS;
 }
 
 export type AuthoriserConfig =
@@ -28,8 +28,8 @@ export type AuthoriserConfig =
     };
 
 /**
- * Defines the parameters that are used to defind the restFul Apiateway
- * @param description - a human readably summary the api's funcation
+ * Defines the parameters that are used to defined the restFul ApiGateway
+ * @param description - a human readably summary the api's function
  * @param name - the name of the apigateway which is
  */
 export interface IApiGatewayRouterProperties {
@@ -44,7 +44,7 @@ export interface IApiGatewayRouterProperties {
 /**
  * Create a restFul apigateway which allows for multiple routs and lambdas
  *
- * @param scope - the stack scope which is assoicated with the building of the gateway
+ * @param scope - the stack scope which is associated with the building of the gateway
 
  */
 export class ApiGatewayFactory extends FactoryBase {
@@ -70,12 +70,12 @@ export class ApiGatewayFactory extends FactoryBase {
   ): apigateway.RestApi {
     const log = new logs.LogGroup(
       this.scope,
-      `${this.getResourceId(id)}-AccesssLogs`,
+      `${this.getResourceId(id)}-AccessLogs`,
       {
         encryptionKey: props.key,
         retention: props.retentionDays
           ? props.retentionDays
-          : constants.RETENTIONDAYS,
+          : constants.RETENTION_DAYS,
         removalPolicy: cdk.RemovalPolicy.DESTROY,
       },
     );
@@ -94,7 +94,7 @@ export class ApiGatewayFactory extends FactoryBase {
           "/*/*": {
             cachingEnabled: true,
             cacheTtl: cdk.Duration.seconds(props.cacheDurationSeconds),
-            cacheDataEncypted: true,
+            cacheDataEncrypted: true,
           },
         },
       },
@@ -105,7 +105,7 @@ export class ApiGatewayFactory extends FactoryBase {
 
   /**
    *
-   * @param authorisation the type of authorsation that will be applied to all added routes
+   * @param authorisation the type of authorization that will be applied to all added routes
    */
   public setDefaultAuthorisation(
     authorisation: apigateway.MethodOptions,
@@ -114,7 +114,7 @@ export class ApiGatewayFactory extends FactoryBase {
   }
 
   /**
-   * Configures system to use IAM as it authorisor
+   * Configures system to use IAM as it authorizer
    */
   public enableIamAuthorisation(): void {
     this.setDefaultAuthorisation({
@@ -124,39 +124,39 @@ export class ApiGatewayFactory extends FactoryBase {
 
   /**
    *
-   * @param authorisor a cogniteo authorisor
+   * @param authorizer a cognito authorizer
    * @param scopes the scope which are allowed
    */
   public enableCognitoAuthorisation(
-    authorisor: apigateway.IAuthorizer,
+    authorizer: apigateway.IAuthorizer,
     scopes?: string[],
   ): void {
     this.setDefaultAuthorisation({
       authorizationType: apigateway.AuthorizationType.COGNITO,
-      authorizer: authorisor,
+      authorizer: authorizer,
       authorizationScopes: scopes,
     });
   }
 
   /**
    *
-   * @param authorisor the customer authorisor to use
+   * @param authorizer the customer authorizer to use
    */
-  public enableCustomAuthoriser(authorisor: apigateway.IAuthorizer): void {
+  public enableCustomAuthoriser(authorizer: apigateway.IAuthorizer): void {
     this.setDefaultAuthorisation({
       authorizationType: apigateway.AuthorizationType.CUSTOM,
-      authorizer: authorisor,
+      authorizer: authorizer,
     });
   }
 
   /**
    *
-   * @param id unique id for the scop of the stack
+   * @param id unique id for the scope of the stack
    * @param config an AuthoriserConfig detailing how the authorisation will. be preformed
    * @param api the api rest gateway to have the authorisation applied
-   * @returns an authorisor based on the config
+   * @returns an authorizer based on the config
    */
-  public createAuthorisor(
+  public createAuthorizer(
     id: string,
     config: AuthoriserConfig,
     api: apigateway.RestApi,
@@ -228,8 +228,8 @@ export class ApiGatewayFactory extends FactoryBase {
 
   /**
    *
-   * @param routes adds multiple routes to the apigateway see {!ILambdaRoute} for details of the route
-   * @param api the apigatway to have the routs added too
+   * @param routes adds multiple routes to the ApiGateway see {!ILambdaRoute} for details of the route
+   * @param api the ApiGateway to have the routes added too
    */
   public addRoutes(routes: ILambdaRoute[], api: apigateway.RestApi): void {
     routes.forEach((route) => this.addRoute(route, api));

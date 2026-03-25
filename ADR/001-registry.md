@@ -41,11 +41,11 @@ As an established package manager for JavaScript and TypeScript NPM.
 
 * 😕 Token based authentication for consumers has a medium complexity to set up.
     * May be more hands-on or documentation focussed to assist users
-    * Adds risk about commiting tokens to repositories
+    * Adds risk about committing tokens to repositories
     * Unclear how we'd handle token leakage
 * 😕 Trust-policy (OIDC) workflow for publication pipelines has some setup complexity.
 * 😕 Procurement/payment involvement for private packages
-* 😕 Unclear on how account management would happen for onboarders/leavers
+* 😕 Unclear on how account management would happen for on-boarders/leavers
 * 😕 No lateral benefits
 
 ### GitHub (SSH)
@@ -53,7 +53,7 @@ As an established package manager for JavaScript and TypeScript NPM.
 Using npm's SSH remote referencing feature to point at tags
 
 * 😕 GitHub actions don't have access to a valid SSH key, so deployment tokens might be necessary
-* 😕 Potential friction with preexisting developer authentication mechanisms
+* 😕 Potential friction with pre-existing developer authentication mechanisms
 * 😕 Somewhat archaic syntax, no command line support.
 * 😕 Sidesteps NPM ecosystem generally, no lateral benefits.
 * 😊 Local Developers already have access to valid SSH keys as a part of their onboarding, so dX is improved for auth
@@ -67,7 +67,7 @@ Using GitHub Artifact Registry and having developers acquire personal-access-tok
 roles; either via custom OIDC application or via copying across long-lived PATs.
 * 😕 Token based authentication for consumers has a medium complexity to set up.
     * May be more hands-on or documentation focussed to assist users
-    * Adds risk about commiting tokens to repositories
+    * Adds risk about committing tokens to repositories
     * Unclear how we'd handle token leakage
 * 😊 Permissions model is easy to add to our existing GitHub onboarding/offboarding processes.
 * 😊 Already procured GitHub as a service.
@@ -75,7 +75,7 @@ roles; either via custom OIDC application or via copying across long-lived PATs.
 ### AWS CodeArtifact
 
 * 😊 Already procured AWS as a service
-* 😊 Reasonable pricing model (wide bandwith under the free tier)
+* 😊 Reasonable pricing model (wide bandwidth under the free tier)
 * 😊 "One Liner" to configure a short lived token local build environment setup (provided via the AWS CLI)
     * Fast dev onboarding
     * Better security posture vs long-lived PATs

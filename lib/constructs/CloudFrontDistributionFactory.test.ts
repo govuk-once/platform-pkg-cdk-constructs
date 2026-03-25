@@ -13,39 +13,38 @@ describe("CloudFrontDistributionFactory", () => {
     const env = (
       process.env.ENVIRONMENT ??
       process.env.USER ??
-      "unkown"
+      "unknown"
     ).replace(/[^a-zA-Z0-9-]/g, "");
 
-    const serviceName = "helloservice";
+    const serviceName = "lexicographer";
 
     const app = new App();
-    const stack = new Stack(app, "testCloudfront");
+    const stack = new Stack(app, "test-cloud-front");
 
     const bucket = new s3.Bucket(stack, "website");
     const factory = new CloudFrontDistributionFactory(stack, serviceName);
 
-    factory.createS3Distribution("testCloudfront", {
+    factory.createS3Distribution("test-cloud-front", {
       bucket,
       defaultRootObject: "start.html",
     });
 
     const template = Template.fromStack(stack);
-
     //the environment is set
-    expect(JSON.stringify(template).includes(env)).toBe(true);
+    expect(JSON.stringify(template)).includes(env);
 
     //the service is set
-    expect(JSON.stringify(template).includes(serviceName)).toBe(true);
+    expect(JSON.stringify(template)).includes(serviceName);
   });
 
   test("creates a S3 Distribution using overriding naming provider", () => {
     const env = (
       process.env.ENVIRONMENT ??
       process.env.USER ??
-      "unkown"
+      "unknown"
     ).replace(/[^a-zA-Z0-9-]/g, "");
 
-    const serviceName = "helloservice";
+    const serviceName = "helloService";
 
     const app = new App();
     const stack = new Stack(app, "testCloudfront");

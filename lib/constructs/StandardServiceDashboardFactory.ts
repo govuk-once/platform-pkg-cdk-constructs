@@ -58,7 +58,7 @@ class DashboardWidgetFactory extends FactoryBase {
       left: [lambda.metricErrors(), lambda.metricThrottles()],
     });
 
-    const invocationDuation = new cloudWatch.GraphWidget({
+    const invocationDuration = new cloudWatch.GraphWidget({
       title: `${name} - Invocations (sum) and Durations (average ms)`,
       width: this.width,
       height: this.height,
@@ -70,7 +70,7 @@ class DashboardWidgetFactory extends FactoryBase {
       ],
     });
 
-    return [errors, invocationDuation];
+    return [errors, invocationDuration];
   }
 
   public createDynamoWidgets(table: ITable): cloudWatch.IWidget[] {

@@ -21,7 +21,7 @@ export type DynamoTableProperties = {
   timeToLiveAttribute?: string; // defaults to TTL
   stream?: dynamoDB.StreamViewType; // defaults to no streams
 
-  globalSecodaryIndexes?: Array<{
+  globalSecondaryIndexes?: Array<{
     indexName: string;
     partitionKey: dynamoDB.Attribute;
     sortKey?: dynamoDB.Attribute;
@@ -99,7 +99,7 @@ export class DynamoTableFactory
         pointInTimeRecoveryEnabled: true,
       };
 
-    props.globalSecodaryIndexes?.forEach((globalIndex) => {
+    props.globalSecondaryIndexes?.forEach((globalIndex) => {
       table.addGlobalSecondaryIndex({
         indexName: globalIndex.indexName,
         partitionKey: globalIndex.partitionKey,

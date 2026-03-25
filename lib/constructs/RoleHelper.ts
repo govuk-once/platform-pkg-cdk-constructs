@@ -68,12 +68,12 @@ export class RoleHelper {
         key.grantDecrypt(props.lambda);
       }
       if (props.operations.find((op) => op === CrudOperations.UPDATE)) {
-        console.log(`adding enccryption update`);
+        console.log(`adding encryption update`);
         key.grantEncrypt(props.lambda);
         key.grantDecrypt(props.lambda);
       }
       if (props.operations.find((op) => op === CrudOperations.DELETE)) {
-        console.log(`adding enccryption update`);
+        console.log(`adding encryption update`);
         key.grantDecrypt(props.lambda);
       }
     }

@@ -7,7 +7,7 @@ import { NullNamingProvider } from "./namingProviders/NullNamingProvider.js";
 
 describe("Waf Factory", () => {
   const serviceName = "WAFService";
-  const env = (process.env.ENVIRONMENT ?? process.env.USER ?? "unkown").replace(
+  const env = (process.env.ENVIRONMENT ?? process.env.USER ?? "unknown").replace(
     /[^a-zA-Z0-9-]/g,
     "",
   );
@@ -38,7 +38,7 @@ describe("Waf Factory", () => {
     );
   });
 
-  test("creates a S3 bucket overriden naming provider", () => {
+  test("creates a S3 bucket overridden naming provider", () => {
     const app = new App();
     const stack = new Stack(app, "testCloudfront");
 
@@ -193,9 +193,9 @@ describe("Waf Factory", () => {
       ]),
     });
 
-    const webAlcs = template.findResources("AWS::WAFv2::WebACL");
+    const webACLs = template.findResources("AWS::WAFv2::WebACL");
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const first = Object.values(webAlcs)[0] as any;
+    const first = Object.values(webACLs)[0] as any;
     const rules = first.Properties.Rules ?? [];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const ruleNames = rules.map((rule: any) => rule.Name);

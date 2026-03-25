@@ -4,8 +4,8 @@ import { Construct } from "constructs";
 
 export class ServiceParameters {
   private hostedZoneNamecache: cdk.aws_ssm.IStringParameter | undefined;
-  private hostedZoneIdcache: cdk.aws_ssm.IStringParameter | undefined;
-  private hostedZonecache: cdk.aws_route53.IHostedZone | undefined;
+  private hostedZoneIdCache: cdk.aws_ssm.IStringParameter | undefined;
+  private hostedZoneCache: cdk.aws_route53.IHostedZone | undefined;
   private acmCertArnCache: cdk.aws_ssm.IStringParameter | undefined;
   private certificateCache: ICertificate | undefined;
 
@@ -24,8 +24,8 @@ export class ServiceParameters {
   }
 
   public hostedZoneId(): string {
-    if (!this.hostedZoneIdcache) {
-      this.hostedZoneIdcache =
+    if (!this.hostedZoneIdCache) {
+      this.hostedZoneIdCache =
         cdk.aws_ssm.StringParameter.fromStringParameterName(
           this.scope,
           `HostedZoneId`,
@@ -33,7 +33,7 @@ export class ServiceParameters {
         );
     }
 
-    return this.hostedZoneIdcache.stringValue;
+    return this.hostedZoneIdCache.stringValue;
   }
 
   public acmCertArn(): cdk.aws_ssm.IStringParameter {
@@ -50,8 +50,8 @@ export class ServiceParameters {
 
   // store reference to local infra resources
   public zone(): cdk.aws_route53.IHostedZone {
-    if (!this.hostedZonecache) {
-      this.hostedZonecache =
+    if (!this.hostedZoneCache) {
+      this.hostedZoneCache =
         cdk.aws_route53.HostedZone.fromHostedZoneAttributes(
           this.scope,
           "HostedZone",
@@ -61,7 +61,7 @@ export class ServiceParameters {
           },
         );
     }
-    return this.hostedZonecache;
+    return this.hostedZoneCache;
   }
 
   public certificate(): ICertificate {

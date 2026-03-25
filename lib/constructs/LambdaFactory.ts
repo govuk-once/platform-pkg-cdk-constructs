@@ -10,12 +10,12 @@ class constants {
   static readonly MEMORY_SIZE: number = 256;
   static readonly DURATION: number = 10;
   static readonly METHODS: string[] = ["get"];
-  static readonly PATHERROR: string = "PATH NOT SET";
-  static readonly RETENTIONDAYS: logs.RetentionDays.TWO_WEEKS;
+  static readonly PATH_ERROR: string = "PATH NOT SET";
+  static readonly RETENTION_DAYS: logs.RetentionDays.TWO_WEEKS;
 }
 
 /**
- * Defines additonal properties to the lambda.FunctionProps
+ * Defines additional properties to the lambda.FunctionProps
  *
  * @param duration - required set maximum run time for the lambda in seconds
  * @param methods - optional set the http verbs to be used when routing via a restful apigateway
@@ -39,8 +39,8 @@ export interface IEnvironmentVariable {
 }
 
 /**
- * create a baseic lambda configured as reruired to work with an routing apigateway or a stand allwon lambda
- * @param scope - the stack scope which is assoicated with the building of the gateway
+ * create a basic lambda configured as required to work with an routing apigateway or a stand alone lambda
+ * @param scope - the stack scope which is associated with the building of the gateway
  */
 export class LambdaFactory extends FactoryBase {
   constructor(
@@ -52,7 +52,7 @@ export class LambdaFactory extends FactoryBase {
   }
 
   /**
-   * Create a lambda function and its assoicated log group
+   * Create a lambda function and its associated log group
    * @param id - a unique identifier for the lambda with in the cdk scope
    * @param props - configuration setting for the lambda see {!ILambdaProperties}
    * @returns A lambda function
@@ -69,7 +69,7 @@ export class LambdaFactory extends FactoryBase {
         logGroupName: `/aws/lambda/${this.getResourceName(namedProps.functionName)}`,
         retention: props.retentionDays
           ? props.retentionDays
-          : constants.RETENTIONDAYS,
+          : constants.RETENTION_DAYS,
         encryptionKey: props.key,
         removalPolicy: cdk.RemovalPolicy.DESTROY,
       },
@@ -87,17 +87,17 @@ export class LambdaFactory extends FactoryBase {
   }
 
   /**
-   * Create a lambda function and its assoicated log group
+   * Create a lambda function and its associated log group
    * @param id - a unique identifier for the lambda with in the cdk scope
    * @param props - configuration setting for the lambda see {!ILambdaProperties}
-   * @returns A ILambdaRoute with the path and methods configured as defind i the props
+   * @returns A ILambdaRoute with the path and methods configured as defined i the props
    */
   public createLambdaWithApiRoute(
     id: string,
     props: ILambdaProperties,
   ): ILambdaRoute {
     return {
-      path: props.path ? props.path : constants.PATHERROR,
+      path: props.path ? props.path : constants.PATH_ERROR,
       methods: props.methods ? props.methods : constants.METHODS,
       lambda: this.createLambda(id, props),
       skipCheckovRule: props.skipCheckovRule,

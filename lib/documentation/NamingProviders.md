@@ -16,13 +16,13 @@ Defines the contract for any class that wishes to provide Identity and name pre-
 
 ## Methods
 
-### getPreFix
+### getPrefix
 
-Accepts no parameters. Returns a string of the pre-fix that will be applied when calling getResouceId and getResourceName
+Accepts no parameters. Returns a string of the pre-fix that will be applied when calling getResourceId and getResourceName
 
 **Returns**: string
 
-### getResouceId
+### getResourceId
 
 Accepts one parameter
 
@@ -32,7 +32,7 @@ Accepts one parameter
 
 **Returns**: string | undefined
 
-### getResouceName
+### getResourceName
 
 Accepts one parameter
 
@@ -42,17 +42,17 @@ Accepts one parameter
 
 ## NullNamingProvider
 
-Implements INamingProvider. The values pass to the methods getResourceId and getResouceName return the value that was provided.
+Implements INamingProvider. The values pass to the methods getResourceId and getResourceName return the value that was provided.
 
 ## Methods
 
-### getPreFix
+### getPrefix
 
 Accepts no parameters. Returns an empty string.
 
 **Returns**: string
 
-### getResouceId
+### getResourceId
 
 Accepts one parameter. Returns the parameter that was passed in the parameter id.
 
@@ -62,7 +62,7 @@ Accepts one parameter. Returns the parameter that was passed in the parameter id
 
 **Returns**: string | undefined
 
-### getResouceName
+### getResourceName
 
 Accepts one parameter. Returns the parameter that was passed in the parameter name.
 
@@ -80,7 +80,7 @@ const id = provider.getResourceId('myLambda');
 
 ## ServiceEnvironmentNamingProvider
 
-Implements INamingProvider. The values pass to the methods getResourceId and getResouceName return the value that was provided pre fixed by the serviceName and the environment.
+Implements INamingProvider. The values pass to the methods getResourceId and getResourceName return the value that was provided pre fixed by the serviceName and the environment.
 
 ## Constructor
 
@@ -94,17 +94,17 @@ Takes one parameter
 
 ## Methods
 
-### getPreFix
+### getPrefix
 
 Accepts no parameters. Returns a string built ad follows {environment}-{serviceName} all will be transformed into lowercase letters. Environment is determined from the process env variables ENVIRONMENT if that is not set it will default to USER. If that is not set it will throw an exception
 
 **Returns**: string
 
-### getResouceId
+### getResourceId
 
-Accepts one parameter. Returns the parameter that was passed in the parameter id pre-fixed with [getPreFix](#_getPreFix).
+Accepts one parameter. Returns the parameter that was passed in the parameter id pre-fixed with [getPrefix](#_getPrefix).
 
-e.g. getResouceId('myWriteLambda') with service name = "dataService" and running in production will return "production-dataservice-myWriteLambda"
+e.g. getResourceId('myWriteLambda') with service name = "dataService" and running in production will return "production-dataservice-myWriteLambda"
 
 | **Parameter Name** | **Type** | **Function** |
 | --- | --- | --- |
@@ -112,11 +112,11 @@ e.g. getResouceId('myWriteLambda') with service name = "dataService" and running
 
 **Returns**: string | undefined
 
-### getResouceName
+### getResourceName
 
-Accepts one parameter. Returns the parameter that was passed in the parameter id pre-fixed with [getPreFix](#_getPreFix).
+Accepts one parameter. Returns the parameter that was passed in the parameter id pre-fixed with [getPrefix](#_getPrefix).
 
-e.g. getResouceName('myTable') with service name = "dataService" and running in production will return "production-dataservice-myTable"
+e.g. getResourceName('myTable') with service name = "dataService" and running in production will return "production-dataservice-myTable"
 
 | **Parameter Name** | **Type** | **Function** |
 | --- | --- | --- |
