@@ -120,11 +120,11 @@ describe(" Standard Dashboard", () => {
     ]);
   });
 
-  test("creates a dashboard with an lambda", () => {
+  test("creates a dashboard with a lambda", () => {
     const app = new App();
     const stack = new Stack(app, "testStack");
 
-    const fnOne = new lambda.Function(stack, "testFunctionOne", {
+    const fnOne = new lambda.Function(stack, "test-function-one", {
       functionName: "fnOne",
       runtime: lambda.Runtime.NODEJS_LATEST,
       handler: "index.handler",
@@ -133,7 +133,7 @@ describe(" Standard Dashboard", () => {
       ),
     });
 
-    const fnTwo = new lambda.Function(stack, "testFunctionTwo", {
+    const fnTwo = new lambda.Function(stack, "test-function-two", {
       functionName: "fnTwo",
       runtime: lambda.Runtime.NODEJS_LATEST,
       handler: "index.handler",
@@ -159,8 +159,8 @@ describe(" Standard Dashboard", () => {
     expectAllContained(dashBody, [
       "Invocations (sum) and Durations (average ms)",
       "Errors and Throttles",
-      "testFunctionOne",
-      "testFunctionTwo",
+      "testfunctionone",
+      "testfunctiontwo",
     ]);
 
     expectAllContained(dashBody, [
@@ -174,7 +174,7 @@ describe(" Standard Dashboard", () => {
 
   test("creates a dashboard with an Dynamo", () => {
     const app = new App();
-    const stack = new Stack(app, "testStack");
+    const stack = new Stack(app, "test-stack");
 
     const tableOne = new dynamo.Table(stack, "TableOne", {
       tableName: "tableOne",

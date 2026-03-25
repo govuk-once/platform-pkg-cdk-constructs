@@ -18,7 +18,7 @@ interface ICloudFrontDistributionProperties {
     prefix?: string;
   };
 
-  Behavior?: Partial<cloudfront.BehaviorOptions>;
+  behavior?: Partial<cloudfront.BehaviorOptions>;
   distribution?: Omit<cloudfront.DistributionProps, "defaultBehavior">;
 }
 
@@ -144,7 +144,7 @@ export class CloudFrontDistributionFactory extends FactoryBase {
       compress: true,
       cachePolicy: cloudfront.CachePolicy.CACHING_OPTIMIZED,
       responseHeadersPolicy: cloudfront.ResponseHeadersPolicy.SECURITY_HEADERS,
-      ...(props.Behavior ?? {}),
+      ...(props.behavior ?? {}),
     };
   }
 
@@ -158,7 +158,7 @@ export class CloudFrontDistributionFactory extends FactoryBase {
       compress: true,
       cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED,
       originRequestPolicy: cloudfront.OriginRequestPolicy.ALL_VIEWER,
-      ...(props.Behavior ?? {}),
+      ...(props.behavior ?? {}),
     };
   }
 }

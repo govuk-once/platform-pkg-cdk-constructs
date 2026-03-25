@@ -28,7 +28,7 @@ describe("Apigateway factory", () => {
 
     localLogKey = new aws_kms.Key(localStack, "testKey", {});
 
-    const fn = new lambda.Function(localStack, "testFunction", {
+    const fn = new lambda.Function(localStack, "test-function", {
       runtime: lambda.Runtime.NODEJS_LATEST,
       handler: "index.handler",
       code: lambda.Code.fromInline(

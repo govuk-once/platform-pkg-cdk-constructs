@@ -58,7 +58,7 @@ These properties are shared by both S3 and API Gateway distribution methods:
 | certificate | acm.Certificate | Certificate for custom domains | NO |
 | webAclId | string | ID of a WAF web ACL to associate | NO |
 | enableStandardLoggingToS3 | Object | Configures S3 bucket and prefix for access logs | NO |
-| Behavior | Partial<BehaviorOptions> | Overrides for the default Behavior | NO |
+| behavior | Partial<BehaviorOptions> | Overrides for the default behavior | NO |
 | distribution | Omit<DistributionProps> | Overrides for the distribution level properties | NO |
 
 ### ICloudFrontDistributionS3Properties

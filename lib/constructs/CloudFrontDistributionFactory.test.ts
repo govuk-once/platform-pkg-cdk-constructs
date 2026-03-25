@@ -122,7 +122,7 @@ describe("CloudFrontDistributionFactory", () => {
 
     factory.createApigatewayDistribution("testApigateway", {
       api,
-      Behavior: {
+      behavior: {
         cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED,
       },
     });
