@@ -76,16 +76,26 @@ data "aws_iam_policy_document" "domain_policy" {
     effect = "Allow"
     principals {
       type        = "AWS"
-      identifiers = [for account in var.additional_accounts : "arn:aws:iam::${account}:root"]
+      identifiers = ["*"]
+    }
+    condition {
+      test     = "ForAnyValue:StringLike"
+      variable = "aws:PrincipalOrgPaths"
+      values   = var.org_paths
     }
     resources = ["*"]
-    actions = [
-      "codeartifact:DescribeDomain",
-      "codeartifact:GetAuthorizationToken",
-      "codeartifact:GetDomainPermissionsPolicy",
-      "codeartifact:ListRepositoriesInDomain",
-      "sts:GetServiceBearerToken"
-    ]
+    actions   = local.domain_policy_pull_actions
+  }
+
+  statement {
+    effect = "Allow"
+    principals {
+      type        = "AWS"
+      identifiers = [for account in var.additional_accounts : "arn:aws:iam::${account}:root"]
+    }
+
+    resources = ["*"]
+    actions   = local.domain_policy_pull_actions
   }
 }
 resource "aws_codeartifact_domain" "this" {
@@ -111,24 +121,27 @@ resource "aws_codeartifact_repository" "this" {
 }
 data "aws_iam_policy_document" "this" {
   statement {
-    effect = "Allow"
-    actions = ["codeartifact:DescribePackageVersion",
-      "codeartifact:DescribeRepository",
-      "codeartifact:GetPackageVersionReadme",
-      "codeartifact:GetRepositoryEndpoint",
-      "codeartifact:ListPackages",
-      "codeartifact:ListPackageVersions",
-      "codeartifact:ListPackageVersionAssets",
-      "codeartifact:ListPackageVersionDependencies",
-      "codeartifact:ReadFromRepository",
-      "codeartifact:GetAuthorizationToken"
-    ]
+    effect    = "Allow"
+    actions   = local.codeartifact_read_actions
     resources = [aws_codeartifact_repository.this.arn]
 
     principals {
       type        = "AWS"
       identifiers = [for account in var.additional_accounts : "arn:aws:iam::${account}:root"]
     }
+  }
+
+  statement {
+    principals {
+      type        = "AWS"
+      identifiers = ["*"]
+    }
+    condition {
+      test     = "ForAnyValue:StringLike"
+      variable = "aws:PrincipalOrgPaths"
+      values   = var.org_paths
+    }
+    resources = [aws_codeartifact_repository.this.arn]
   }
 
   statement {
@@ -147,4 +160,26 @@ resource "aws_codeartifact_repository_permissions_policy" "this" {
   repository      = aws_codeartifact_repository.this.repository
   domain          = aws_codeartifact_domain.this.domain
   policy_document = data.aws_iam_policy_document.this.json
+}
+
+locals {
+  domain_policy_pull_actions = [
+    "codeartifact:DescribeDomain",
+    "codeartifact:GetAuthorizationToken",
+    "codeartifact:GetDomainPermissionsPolicy",
+    "codeartifact:ListRepositoriesInDomain",
+    "sts:GetServiceBearerToken"
+  ]
+  codeartifact_read_actions = [
+    "codeartifact:DescribePackageVersion",
+    "codeartifact:DescribeRepository",
+    "codeartifact:GetPackageVersionReadme",
+    "codeartifact:GetRepositoryEndpoint",
+    "codeartifact:ListPackages",
+    "codeartifact:ListPackageVersions",
+    "codeartifact:ListPackageVersionAssets",
+    "codeartifact:ListPackageVersionDependencies",
+    "codeartifact:ReadFromRepository",
+    "codeartifact:GetAuthorizationToken"
+  ]
 }

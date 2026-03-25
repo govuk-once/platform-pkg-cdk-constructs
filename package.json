@@ -7,8 +7,9 @@
   "types": "./dist/index.d.ts",
   "type": "module",
   "scripts": {
-    "test": "vitest run",
-    "test:unit": "vitest run --coverage src --passWithNoTests",
+    "test": "vitest run lib",
+    "test:unit": "vitest run --coverage lib --passWithNoTests",
+    "test:ci": "vitest run --coverage lib",
     "prepublishOnly": "pnpm run build",
     "build:esm": "tsc -p tsconfig.esm.json",
     "build:cjs": "tsc -p tsconfig.cjs.json",
@@ -30,8 +31,8 @@
         "types": "./dist/cjs/index.d.ts"
       },
       "import": {
-          "default": "./dist/esm/index.js",
-          "types": "./dist/esm/index.d.ts"
+        "default": "./dist/esm/index.js",
+        "types": "./dist/esm/index.d.ts"
       }
     },
     "./namingProviders": {
@@ -54,6 +55,9 @@
     "@types/node": "^25.0.9",
     "@typescript-eslint/eslint-plugin": "^8.53.1",
     "@typescript-eslint/parser": "^8.53.1",
+    "@vitest/coverage-v8": "^4.1.0",
+    "aws-cdk": "^2.1101.0",
+    "aws-cdk-lib": "^2.235.0",
     "axios": "^1.13.3",
     "cdk-nag": "^2.37.55",
     "esbuild": "^0.27.2",
@@ -66,9 +70,8 @@
     "plugin": "link:@nx/eslint/plugin",
     "prettier": "^3.8.0",
     "typescript": "^5.9.3",
-    "aws-cdk": "^2.1101.0",
-    "aws-cdk-lib": "^2.235.0",
-    "vitest": "^4.0.18"
+    "vite": "^8.0.0",
+    "vitest": "^4.1.0"
   },
   "dependencies": {
     "constructs": "^10.5.1",

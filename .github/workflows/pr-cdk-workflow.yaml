@@ -1,0 +1,36 @@
+name: CDK PR
+on:
+  pull_request:
+    branches: [main]
+    paths: 
+      - '**.ts'
+      - '**.json'
+      - '**.mts'
+      - 'lib/**'
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  test-cdk:
+    name: Run CDK Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout-code
+        uses: actions/checkout@v6
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: ".nvmrc"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: "pnpm install"
+
+      - name: Run Tests
+        run: "pnpm run test:ci"
