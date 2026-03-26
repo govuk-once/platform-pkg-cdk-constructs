@@ -124,7 +124,6 @@ data "aws_iam_policy_document" "this" {
     effect    = "Allow"
     actions   = local.codeartifact_read_actions
     resources = [aws_codeartifact_repository.this.arn]
-
     principals {
       type        = "AWS"
       identifiers = [for account in var.additional_accounts : "arn:aws:iam::${account}:root"]
@@ -132,6 +131,9 @@ data "aws_iam_policy_document" "this" {
   }
 
   statement {
+    effect    = "Allow"
+    actions   = local.codeartifact_read_actions
+    resources = [aws_codeartifact_repository.this.arn]
     principals {
       type        = "AWS"
       identifiers = ["*"]
@@ -141,7 +143,6 @@ data "aws_iam_policy_document" "this" {
       variable = "aws:PrincipalOrgPaths"
       values   = var.org_paths
     }
-    resources = [aws_codeartifact_repository.this.arn]
   }
 
   statement {
