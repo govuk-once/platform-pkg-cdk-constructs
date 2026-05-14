@@ -30,13 +30,13 @@ export class StaticS3WebsiteFactory extends FactoryBase {
     const removalPolicy = props.removalPolicy ?? cdk.RemovalPolicy.DESTROY;
     const publicRead = props.publicReadAccess ?? true;
     const blockPublicAccess = publicRead
-      ? new s3.BlockPublicAccess({
-          blockPublicAcls: false,
-          blockPublicPolicy: false,
-          ignorePublicAcls: false,
-          restrictPublicBuckets: false,
-        })
-      : s3.BlockPublicAccess.BLOCK_ALL;
+       ? new s3.BlockPublicAccess({
+           blockPublicAcls: true,
+           blockPublicPolicy: false,
+           ignorePublicAcls: true,
+           restrictPublicBuckets: false,
+         })
+       : s3.BlockPublicAccess.BLOCK_ALL;
 
     return new s3.Bucket(this.scope, this.getResourceId(id), {
       bucketName: this.getResourceName(props.siteName),
@@ -48,7 +48,7 @@ export class StaticS3WebsiteFactory extends FactoryBase {
 
       publicReadAccess: publicRead,
       blockPublicAccess,
-      enforceSSL: false,
+      enforceSSL: true,
     });
   }
 }

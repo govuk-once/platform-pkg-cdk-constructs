@@ -1,0 +1,19 @@
+{
+  "name": "test-cdk-app",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "synth": "cdk synth"
+  },
+  "devDependencies": {
+    "aws-cdk": "^2.1101.0",
+    "aws-cdk-lib": "^2.235.0",
+    "constructs": "^10.5.1",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "once-platform-constructs": "workspace:*"
+  }
+}
