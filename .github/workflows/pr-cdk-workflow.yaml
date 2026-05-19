@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   test-cdk:
-    name: Run CDK Unit Tests
+    name: Run CDK Unit Tests and Validation
     runs-on: ubuntu-latest
     steps:
       - name: checkout-code
@@ -34,3 +34,19 @@ jobs:
 
       - name: Run Tests
         run: "pnpm run test:ci"
+
+      - name: Build Test CDK App
+        working-directory: test/cdk-app
+        run: |
+          pnpm install
+          pnpm run build
+
+      - name: Synthesize CDK Stack
+        working-directory: test/cdk-app
+        run: |
+          npx cdk synth --quiet > template.yaml
+
+      - name: Run cdk-nag Validation
+        working-directory: test/cdk-app
+        run: |
+          node ../../node_modules/.pnpm/cdk-nag@2.37.55_aws-cdk-lib@2.238.0_constructs@10.5.1__constructs@10.5.1/node_modules/cdk-nag/lib/index.js --template-file template.yaml
