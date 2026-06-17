@@ -7,3 +7,4 @@ export { ServiceParameters } from "./ServiceParameters.js";
 export { StandardServiceDashboardFactory } from "./StandardServiceDashboardFactory.js";
 export { StaticS3WebsiteFactory } from "./StaticS3WebsiteFactory.js";
 export { WafFactory } from "./WafFactory.js";
+export { FactoryBase } from "./FactoryBase.js";
