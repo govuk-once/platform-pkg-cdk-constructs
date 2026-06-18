@@ -1,0 +1,43 @@
+name: Publish Platform-Constructs (dev)
+on:
+  push:
+    branches: [main]
+    paths:
+      - "**.ts"
+      - "**.json"
+      - "**.mts"
+      - "lib/**"
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  publish:
+    name: Publish Platform-Constructs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: ".nvmrc"
+          cache: "pnpm"
+
+      - name: Configure CodeArtifact auth
+        uses: govuk-once/platform-actions/.github/actions/codeartifact-auth@b4f8bce4ba09bc31301025ff1a5b5daa4973dee6
+        with:
+          role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_ARN }}
+
+      - name: Install Deps
+        run: pnpm install
+
+      - name: Build Package
+        run: pnpm run build
+
+      - name: Publish Package to CodeArtifact
+        run: pnpm publish --tag next

@@ -28,6 +28,11 @@ jobs:
         with:
           node-version-file: ".nvmrc"
           cache: "pnpm"
+  
+      - name: Configure CodeArtifact auth
+        uses: govuk-once/platform-actions/.github/actions/codeartifact-auth@b4f8bce4ba09bc31301025ff1a5b5daa4973dee6
+        with:
+          role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_ARN }}
 
       - name: Install dependencies
         run: "pnpm install"
