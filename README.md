@@ -4,8 +4,6 @@
 
 Provides an NPM installable suite of AWS CDK constructs and helper-factories for creating AWS resources to support development.
 
-
-
 ## Usage/Setup
 
 ### Locally
