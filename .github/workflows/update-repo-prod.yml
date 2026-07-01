@@ -134,7 +134,7 @@ jobs:
           cache: "pnpm"
 
       - name: Install dependencies
-        run: "pnpm install"
+        run: "pnpm --frozen-lockfile"
 
       - name: Publish
         run: "pnpm publish"
