@@ -15,10 +15,18 @@ permissions:
 jobs:
   test-cdk:
     name: Run CDK Unit Tests and Validation
+    environment: development
     runs-on: ubuntu-latest
     steps:
       - name: checkout-code
         uses: actions/checkout@v6
+
+      - name: Configure Aws Credentials
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+          role-session-name: GH-Actions-Deploy-Development-Constructs
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
