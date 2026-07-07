@@ -1,24 +1,24 @@
-import { Construct } from "constructs";
-import { FactoryBase } from "./FactoryBase.js";
-import { INamingProvider } from "./namingProviders/INamingProvider.js";
-import * as waf from "aws-cdk-lib/aws-wafv2";
+import { Construct } from 'constructs';
+import { FactoryBase } from './FactoryBase';
+import { INamingProvider } from './namingProviders/INamingProvider';
+import * as waf from 'aws-cdk-lib/aws-wafv2';
 
 export interface IWafProperties {
-  scope: "CLOUDFRONT" | "REGIONAL";
+  scope: 'CLOUDFRONT' | 'REGIONAL';
   name: string;
-  defaultAction?: "ALLOW" | "BLOCK";
+  defaultAction?: 'ALLOW' | 'BLOCK';
 
   managedRuleGroups?: Array<{
     vendorName?: string;
     name: string;
     priority: number;
-    overrideAction?: "NONE" | "COUNT";
+    overrideAction?: 'NONE' | 'COUNT';
   }>;
 
   rateLimit?: {
     limit: number;
     priority: number;
-    action?: "BLOCK" | "COUNT";
+    action?: 'BLOCK' | 'COUNT';
   };
 
   metricName?: string;
@@ -27,40 +27,40 @@ export interface IWafProperties {
 
 export class WafFactory extends FactoryBase {
   constructor(
-    private readonly scope: Construct,
+    scope: Construct,
     serviceName: string,
     namingProvider?: INamingProvider,
   ) {
-    super(serviceName, namingProvider);
+    super(scope, serviceName, namingProvider);
   }
 
   public createWebAcl(id: string, props: IWafProperties): waf.CfnWebACL {
     const defaultManagedRuleGroups = props.managedRuleGroups ?? [
-      { name: "AWSManagedRulesCommonRuleSet", priority: 20 },
-      { name: "AWSManagedRulesKnownBadInputsRuleSet", priority: 30 },
-      { name: "AWSManagedRulesSQLiSet", priority: 40 },
-      { name: "AWSManagedRulesAmazonIpReputationList", priority: 50 },
+      { name: 'AWSManagedRulesCommonRuleSet', priority: 20 },
+      { name: 'AWSManagedRulesKnownBadInputsRuleSet', priority: 30 },
+      { name: 'AWSManagedRulesSQLiSet', priority: 40 },
+      { name: 'AWSManagedRulesAmazonIpReputationList', priority: 50 },
     ];
 
     const rules: waf.CfnWebACL.RuleProperty[] = [];
 
     if (props.rateLimit) {
       rules.push({
-        name: "RateLimit",
+        name: 'RateLimit',
         priority: props.rateLimit.priority,
         statement: {
           rateBasedStatement: {
             limit: props.rateLimit.limit,
-            aggregateKeyType: "IP",
+            aggregateKeyType: 'IP',
           },
         },
         action:
-          (props.rateLimit.action ?? "BLOCK") === "COUNT"
+          (props.rateLimit.action ?? 'BLOCK') === 'COUNT'
             ? { count: {} }
             : { block: {} },
         visibilityConfig: {
           cloudWatchMetricsEnabled: true,
-          metricName: "RateLimit",
+          metricName: 'RateLimit',
           sampledRequestsEnabled: true,
         },
       });
@@ -71,12 +71,12 @@ export class WafFactory extends FactoryBase {
         priority: group.priority,
         statement: {
           managedRuleGroupStatement: {
-            vendorName: group.vendorName ?? "AWS",
+            vendorName: group.vendorName ?? 'AWS',
             name: group.name,
           },
         },
         overrideAction:
-          (group.overrideAction ?? "BLOCK") === "COUNT"
+          (group.overrideAction ?? 'BLOCK') === 'COUNT'
             ? { count: {} }
             : { none: {} },
         visibilityConfig: {
@@ -89,11 +89,11 @@ export class WafFactory extends FactoryBase {
 
     props.customRules?.forEach((rule) => rules.push(rule));
 
-    return new waf.CfnWebACL(this.scope, this.getResourceId(id), {
+    return new waf.CfnWebACL(this.getScope(), this.getResourceId(id), {
       name: this.getResourceName(props.name),
       scope: props.scope,
       defaultAction:
-        (props.defaultAction ?? "ALLOW") === "BLOCK"
+        (props.defaultAction ?? 'ALLOW') === 'BLOCK'
           ? { block: {} }
           : { allow: {} },
       visibilityConfig: {

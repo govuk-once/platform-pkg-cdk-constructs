@@ -1,8 +1,8 @@
-import { INamingProvider } from "./INamingProvider.js";
+import { INamingProvider } from './INamingProvider';
 
 export class NullNamingProvider implements INamingProvider {
-  getPrefix(): string {
-    return "";
+  getPreFix(): string {
+    return '';
   }
 
   getResourceId(id?: string): string | undefined {

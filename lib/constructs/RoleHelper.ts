@@ -1,18 +1,21 @@
-import { Construct } from "constructs";
-import * as iam from "aws-cdk-lib/aws-iam";
-import * as lambda from "aws-cdk-lib/aws-lambda";
-import * as dynamodb from "aws-cdk-lib/aws-dynamodb";
-import * as s3 from "aws-cdk-lib/aws-s3";
+import { Construct } from 'constructs';
+import * as iam from 'aws-cdk-lib/aws-iam';
+import * as lambda from 'aws-cdk-lib/aws-lambda';
+import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
+import * as s3 from 'aws-cdk-lib/aws-s3';
+import * as sqs from 'aws-cdk-lib/aws-sqs';
+import { INamingProvider } from './namingProviders/INamingProvider';
+import { ServiceEnvironmentNamingProvider } from './namingProviders/ServiceEnvironmentNamingProvider';
+import { IKey } from 'aws-cdk-lib/aws-kms';
+import { Stack } from 'aws-cdk-lib';
 
-import { INamingProvider } from "./namingProviders/INamingProvider.js";
-import { ServiceEnvironmentNamingProvider } from "./namingProviders/ServiceEnvironmentNamingProvider.js";
-import { aws_kms } from "aws-cdk-lib";
-
-export enum CrudOperations {
-  CREATE = "CREATE",
-  READ = "READ",
-  UPDATE = "UPDATE",
-  DELETE = "DELETE",
+export enum Operations {
+  CREATE = 'CREATE',
+  READ = 'READ',
+  UPDATE = 'UPDATE',
+  DELETE = 'DELETE',
+  LIST = 'LIST',
+  ALL = 'ALL',
 }
 
 export interface IRoleHelperProps {
@@ -20,7 +23,8 @@ export interface IRoleHelperProps {
   lambda: lambda.IFunction;
   table?: dynamodb.ITable;
   bucket?: s3.IBucket;
-  operations: CrudOperations[];
+  queue?: sqs.Queue;
+  operations: Operations[];
   role?: iam.Role;
 }
 
@@ -39,7 +43,7 @@ export class RoleHelper {
   public addDynamoOperationPermissionsToLambda(
     props: IRoleHelperProps,
   ): iam.Role {
-    if (!props.table) throw "table must be supplied to add s3 role to lambda";
+    if (!props.table) throw 'table must be supplied to add s3 role to lambda';
 
     const role = this.findOrCreateRole(props);
 
@@ -51,38 +55,11 @@ export class RoleHelper {
       }),
     );
 
-    console.log("looking for database key");
-    const key = this.getTableEncryptionKey(props.table);
-
-    console.log(`key = ${key}`);
-
-    if (key) {
-      if (props.operations.find((op) => op === CrudOperations.READ)) {
-        console.log(`adding decryption`);
-        key.grantDecrypt(props.lambda);
-        key.grantGenerateMac(props.lambda);
-      }
-      if (props.operations.find((op) => op === CrudOperations.CREATE)) {
-        console.log(`adding encryption create`);
-        key.grantEncrypt(props.lambda);
-        key.grantDecrypt(props.lambda);
-      }
-      if (props.operations.find((op) => op === CrudOperations.UPDATE)) {
-        console.log(`adding encryption update`);
-        key.grantEncrypt(props.lambda);
-        key.grantDecrypt(props.lambda);
-      }
-      if (props.operations.find((op) => op === CrudOperations.DELETE)) {
-        console.log(`adding encryption update`);
-        key.grantDecrypt(props.lambda);
-      }
-    }
-
     return role;
   }
 
   public addS3OperationPermissionsToLambda(props: IRoleHelperProps): iam.Role {
-    if (!props.bucket) throw "bucket must be supplied to add s3 role to lambda";
+    if (!props.bucket) throw 'bucket must be supplied to add s3 role to lambda';
 
     const role = this.findOrCreateRole(props);
 
@@ -105,11 +82,83 @@ export class RoleHelper {
         new iam.PolicyStatement({
           effect: iam.Effect.ALLOW,
           actions: objectActions,
-          resources: [props.bucket.arnForObjects("*")],
+          resources: [props.bucket.arnForObjects('*')],
         }),
       );
     }
     return role;
+  }
+
+  public addToResourcePolicyTokmsKey(scope: Construct, key: IKey) {
+    key.addToResourcePolicy(
+      new iam.PolicyStatement({
+        principals: [
+          new iam.ServicePrincipal(
+            `logs.${Stack.of(scope).region}.amazonaws.com`,
+          ),
+        ],
+        actions: [
+          'kms:Encrypt',
+          'kms:Decrypt',
+          'kms:ReEncrypt*',
+          'kms:GenerateDataKey*',
+          'kms:DescribeKey',
+        ],
+        resources: ['*'],
+      }),
+    );
+  }
+
+  public addSQSOperationPermissionsToLambda(props: IRoleHelperProps): iam.Role {
+    if (!props.queue) throw 'queue must be supplied to add sqs roles to lambda';
+
+    const role = this.findOrCreateRoleTemp(props);
+
+    role.addToPolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: this.createQueueOperations(props.operations),
+        resources: [props.queue.queueArn, `${props.queue.queueArn}/index/*`],
+      }),
+    );
+
+    return role;
+  }
+
+  private createQueueOperations(operations: Operations[]): string[] {
+    const set = new Set<string>();
+
+    operations.forEach((operation) => {
+      switch (operation) {
+        case Operations.CREATE:
+          throw 'Create is not supported for SQS queues';
+          break;
+        case Operations.READ:
+          set.add('sqs:GetQueueAttibutes');
+          set.add('sqs:GetQueueUrl');
+          set.add('sqs:ReceiveMessage');
+          break;
+        case Operations.UPDATE:
+          set.add('sqs:SendMessage');
+          set.add('sqs:SendMessageBatch');
+          set.add('sqs:ChangeMessageVisibilty');
+          set.add('sqs:ChangeMessageVisibiltyBatch');
+          set.add('sqs:SetQueueAttributes');
+          break;
+        case Operations.DELETE:
+          set.add('sqs:DeleteMessage');
+          set.add('sqs:DeleteMessageBatch');
+          set.add('sqs:PurgeQueue');
+          break;
+        case Operations.LIST:
+          set.add('sqs:ListQueues');
+          set.add('sqs:ListQueueTags');
+          set.add('sqs:ListDeadLetterSourcesQueues');
+          break;
+      }
+    });
+
+    return [...set];
   }
 
   private findOrCreateRole(props: IRoleHelperProps): iam.Role {
@@ -120,40 +169,62 @@ export class RoleHelper {
     if (roleCandidate) return roleCandidate as iam.Role;
 
     return new iam.Role(
-      this.scope,
-      this.namingProvider.getResourceId(props.id) ?? "noId",
+      this.getScope(),
+      this.namingProvider.getResourceId(props.id) ?? 'noId',
       {
-        assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
+        assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
         description: `Role assumed by lambda: ${props.lambda.functionName} for resource access`,
         managedPolicies: [
           iam.ManagedPolicy.fromAwsManagedPolicyName(
-            "service-role/AWSLambdaBasicExecutionRole",
+            'service-role/AWSLambdaBasicExecutionRole',
           ),
         ],
       },
     );
   }
 
-  private createDynamodbOperations(operations: CrudOperations[]): string[] {
+  private findOrCreateRoleTemp(props: IRoleHelperProps): iam.Role {
+    if (props.role) return props.role;
+
+    const roleCandidate = (props.lambda as lambda.Function).role;
+
+    if (roleCandidate) return roleCandidate as iam.Role;
+
+    return new iam.Role(
+      this.getScope(),
+      this.namingProvider.getResourceId(props.id) ?? 'noId',
+      {
+        assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
+        description: `Role assumed by lambda: ${props.lambda.functionName} for resource access`,
+        managedPolicies: [
+          iam.ManagedPolicy.fromAwsManagedPolicyName(
+            'service-role/AWSLambdaBasicExecutionRole',
+          ),
+        ],
+      },
+    );
+  }
+
+  private createDynamodbOperations(operations: Operations[]): string[] {
     const set = new Set<string>();
 
     operations.forEach((operation) => {
       switch (operation) {
-        case CrudOperations.CREATE:
-          set.add("dynamodb:PutItem");
+        case Operations.CREATE:
+          set.add('dynamodb:PutItem');
           break;
-        case CrudOperations.READ:
-          set.add("dynamodb:BatchGetItem");
-          set.add("dynamodb:GetItem");
-          set.add("dynamodb:Query");
-          set.add("dynamodb:Scan");
-          set.add("dynamodb:DescribeTable");
+        case Operations.READ:
+          set.add('dynamodb:BatchGetItem');
+          set.add('dynamodb:GetItem');
+          set.add('dynamodb:Query');
+          set.add('dynamodb:Scan');
+          set.add('dynamodb:DescribeTable');
           break;
-        case CrudOperations.UPDATE:
-          set.add("dynamodb:UpdateItem");
+        case Operations.UPDATE:
+          set.add('dynamodb:UpdateItem');
           break;
-        case CrudOperations.DELETE:
-          set.add("dynamodb:DeleteItem");
+        case Operations.DELETE:
+          set.add('dynamodb:DeleteItem');
           break;
       }
     });
@@ -161,7 +232,7 @@ export class RoleHelper {
     return [...set];
   }
 
-  private createS3Operations(operations: CrudOperations[]): {
+  private createS3Operations(operations: Operations[]): {
     bucketActions: string[];
     objectActions: string[];
   } {
@@ -170,21 +241,21 @@ export class RoleHelper {
 
     operations.forEach((operation) => {
       switch (operation) {
-        case CrudOperations.CREATE:
-          objectActions.add("s3:PutObject");
-          objectActions.add("s3:AbortMultipartUpload");
-          objectActions.add("s3:ListMultipartUploadParts");
+        case Operations.CREATE:
+          objectActions.add('s3:PutObject');
+          objectActions.add('s3:AbortMultipartUpload');
+          objectActions.add('s3:ListMultipartUploadParts');
           break;
-        case CrudOperations.READ:
-          bucketActions.add("s3:ListBucket");
-          objectActions.add("s3:GetObject");
+        case Operations.READ:
+          bucketActions.add('s3:ListBucket');
+          objectActions.add('s3:GetObject');
           break;
-        case CrudOperations.UPDATE:
-          objectActions.add("s3:PutObject");
-          objectActions.add("s3:PutObjectTagging");
+        case Operations.UPDATE:
+          objectActions.add('s3:PutObject');
+          objectActions.add('s3:PutObjectTagging');
           break;
-        case CrudOperations.DELETE:
-          objectActions.add("s3:DeleteObject");
+        case Operations.DELETE:
+          objectActions.add('s3:DeleteObject');
           break;
       }
     });
@@ -193,22 +264,5 @@ export class RoleHelper {
       bucketActions: [...bucketActions],
       objectActions: [...objectActions],
     };
-  }
-
-  private getTableEncryptionKey(
-    table: dynamodb.ITable,
-  ): aws_kms.IKey | undefined {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const anyTable = table as any;
-
-    if (
-      anyTable &&
-      typeof anyTable === "object" &&
-      "encryptionKey" in anyTable
-    ) {
-      return anyTable.encryptionKey as aws_kms.IKey | undefined;
-    }
-
-    return undefined;
   }
 }

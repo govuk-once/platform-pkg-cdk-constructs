@@ -1,10 +1,9 @@
-import { Construct } from "constructs";
-import { FactoryBase } from "./FactoryBase.js";
-import { INamingProvider } from "./namingProviders/INamingProvider.js";
-import * as cdk from "aws-cdk-lib";
-import * as dynamoDB from "aws-cdk-lib/aws-dynamodb";
-import * as kms from "aws-cdk-lib/aws-kms";
-import * as iam from "aws-cdk-lib/aws-iam";
+import { Construct } from 'constructs';
+import { FactoryBase } from './FactoryBase';
+import { INamingProvider } from './namingProviders/INamingProvider';
+import * as cdk from 'aws-cdk-lib';
+import * as dynamoDB from 'aws-cdk-lib/aws-dynamodb';
+import * as kms from 'aws-cdk-lib/aws-kms';
 
 export type DynamoTableProperties = {
   tableName: string;
@@ -21,7 +20,7 @@ export type DynamoTableProperties = {
   timeToLiveAttribute?: string; // defaults to TTL
   stream?: dynamoDB.StreamViewType; // defaults to no streams
 
-  globalSecondaryIndexes?: Array<{
+  globalSecodaryIndexes?: Array<{
     indexName: string;
     partitionKey: dynamoDB.Attribute;
     sortKey?: dynamoDB.Attribute;
@@ -44,12 +43,11 @@ export class DynamoTableFactory
   implements IDynamoTableContract
 {
   constructor(
-    private readonly scope: Construct,
-    private readonly region: string,
+    scope: Construct,
     serviceName: string,
     namingProvider?: INamingProvider,
   ) {
-    super(serviceName, namingProvider);
+    super(scope, serviceName, namingProvider);
   }
 
   public createTable(id: string, props: DynamoTableProperties): dynamoDB.Table {
@@ -57,28 +55,12 @@ export class DynamoTableFactory
 
     const encryptionKey =
       props.key ??
-      new kms.Key(this.scope, `${this.getResourceId(id)}_key`, {
+      new kms.Key(this.getScope(), `${this.getResourceId(id)}_key`, {
         enableKeyRotation: true,
         removalPolicy,
       });
 
-    encryptionKey.addToResourcePolicy(
-      new iam.PolicyStatement({
-        principals: [
-          new iam.ServicePrincipal(`logs.${this.region}.amazonaws.com`),
-        ],
-        actions: [
-          "kms:Encrypt",
-          "kms:Decrypt",
-          "kms:ReEncrypt*",
-          "kms:GenerateDataKey*",
-          "kms:DescribeKey",
-        ],
-        resources: ["*"],
-      }),
-    );
-
-    const table = new dynamoDB.Table(this.scope, this.getResourceId(id), {
+    const table = new dynamoDB.Table(this.getScope(), this.getResourceId(id), {
       tableName: this.getResourceName(props.tableName),
       partitionKey: props.partitionKey,
       sortKey: props.sortKey,
@@ -89,7 +71,7 @@ export class DynamoTableFactory
       encryption: dynamoDB.TableEncryption.CUSTOMER_MANAGED,
       encryptionKey: encryptionKey,
 
-      timeToLiveAttribute: props.timeToLiveAttribute ?? "TTL",
+      timeToLiveAttribute: props.timeToLiveAttribute ?? 'TTL',
       stream: props.stream,
     });
 
@@ -99,7 +81,7 @@ export class DynamoTableFactory
         pointInTimeRecoveryEnabled: true,
       };
 
-    props.globalSecondaryIndexes?.forEach((globalIndex) => {
+    props.globalSecodaryIndexes?.forEach((globalIndex) => {
       table.addGlobalSecondaryIndex({
         indexName: globalIndex.indexName,
         partitionKey: globalIndex.partitionKey,

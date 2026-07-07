@@ -1,30 +1,30 @@
-import { ServiceEnvironmentNamingProvider } from "./ServiceEnvironmentNamingProvider.js";
-import { describe, test, expect } from "vitest";
+import { ServiceEnvironmentNamingProvider } from './ServiceEnvironmentNamingProvider';
+import { describe, test, expect } from 'vitest';
 
-describe("Environment Naming Provider", () => {
-  test("naming provider adds environment and service name the id", () => {
+describe('Environment Naming Provider', () => {
+  test('naming provider adds enviroment and service name the id', () => {
     const env = (
       process.env.ENVIRONMENT ??
       process.env.USER ??
-      "unknown"
-    ).replace(/[^a-zA-Z0-9-]/g, "");
+      'unkown'
+    ).replace(/[^a-zA-Z0-9-]/g, '');
 
-    const serviceName = "FishMaker";
+    const serviceName = 'FishMaker';
 
     const namingProvider = new ServiceEnvironmentNamingProvider(serviceName);
-    expect(namingProvider.getResourceId("fred")).toBe(
+    expect(namingProvider.getResourceId('fred')).toBe(
       `${env}-${serviceName.toLowerCase()}-fred`,
     );
   });
 
-  test("naming provider doesn't double prefix", () => {
+  test('naming provider doesnt double prefix', () => {
     const env = (
       process.env.ENVIRONMENT ??
       process.env.USER ??
-      "unknown"
-    ).replace(/[^a-zA-Z0-9-]/g, "");
+      'unkown'
+    ).replace(/[^a-zA-Z0-9-]/g, '');
 
-    const serviceName = "FishMaker";
+    const serviceName = 'FishMaker';
 
     const namingProvider = new ServiceEnvironmentNamingProvider(serviceName);
     expect(
@@ -34,56 +34,56 @@ describe("Environment Naming Provider", () => {
     ).toBe(`${env}-${serviceName.toLowerCase()}-fred`);
   });
 
-  test("naming provider adds environment and service name the id truncates to 40 chars max", () => {
+  test('naming provider adds enviroment and service name the id truncates to 255 characts max', () => {
     const env = (
       process.env.ENVIRONMENT ??
       process.env.USER ??
-      "unknown"
-    ).replace(/[^a-zA-Z0-9-]/g, "");
+      'unkown'
+    ).replace(/[^a-zA-Z0-9-]/g, '');
 
-    const serviceName = "FishMaker";
+    const serviceName = 'FishMaker';
     const resourceId =
-      `${env}-${serviceName.toLowerCase()}-fred-this-is-the-most-amazing-web-site-ever`.substring(
+      `${env}-${serviceName.toLowerCase()}-fred-this-is-the-most-amazing-web-site-ever-fdgdfg-fdgfd-gfdg-fdg-fdg-fdg-fgfd-gdf-gfd-g-fdg-fdg-df-gf-dg-df-gdf-g-dfg-d-gd`.substring(
         0,
-        40,
+        255,
       );
 
     const namingProvider = new ServiceEnvironmentNamingProvider(serviceName);
     expect(
       namingProvider.getResourceId(
-        "fred-this-is-the-most-amazing-web-site-ever",
+        'phillarmstrong-fishmaker-fred-this-is-the-most-amazing-web-site-ever-fdgdfg-fdgfd-gfdg-fdg-fdg-fdg-fgfd-gdf-gfd-g-fdg-fdg-df-gf-dg-df-gdf-g-dfg-d-gd',
       ),
     ).toBe(resourceId);
   });
 
-  test("naming provider adds environment and service name the name", () => {
+  test('naming provider adds enviroment and service name the name', () => {
     const env = (
       process.env.ENVIRONMENT ??
       process.env.USER ??
-      "unknown"
-    ).replace(/[^a-zA-Z0-9-]/g, "");
+      'unkown'
+    ).replace(/[^a-zA-Z0-9-]/g, '');
 
-    const serviceName = "FishMaker";
+    const serviceName = 'FishMaker';
 
     const namingProvider = new ServiceEnvironmentNamingProvider(serviceName);
-    expect(namingProvider.getResourceName("Clair")).toBe(
+    expect(namingProvider.getResourceName('Clair')).toBe(
       `${env}-${serviceName.toLowerCase()}-Clair`,
     );
   });
 
-  test("naming provider adds environment and service name the name doesn't truncate", () => {
+  test('naming provider adds enviroment and service name the name doesnt truncate', () => {
     const env = (
       process.env.ENVIRONMENT ??
       process.env.USER ??
-      "unknown"
-    ).replace(/[^a-zA-Z0-9-]/g, "");
+      'unkown'
+    ).replace(/[^a-zA-Z0-9-]/g, '');
 
-    const serviceName = "FishMaker";
+    const serviceName = 'FishMaker';
 
     const namingProvider = new ServiceEnvironmentNamingProvider(serviceName);
     expect(
       namingProvider.getResourceName(
-        "Clair-this-is-the-most-amazing-web-site-ever",
+        'Clair-this-is-the-most-amazing-web-site-ever',
       ),
     ).toBe(
       `${env}-${serviceName.toLowerCase()}-Clair-this-is-the-most-amazing-web-site-ever`,

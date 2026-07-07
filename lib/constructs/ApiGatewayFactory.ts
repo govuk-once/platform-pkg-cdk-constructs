@@ -1,26 +1,26 @@
-import { ILambdaRoute } from "./types/ILambdaRoute.js";
-import { FactoryBase } from "./FactoryBase.js";
-import { INamingProvider } from "./namingProviders/INamingProvider.js";
-import { Construct } from "constructs";
-import * as cdk from "aws-cdk-lib";
-import * as cognito from "aws-cdk-lib/aws-cognito";
-import * as apigateway from "aws-cdk-lib/aws-apigateway";
-import * as lambda from "aws-cdk-lib/aws-lambda";
-import * as logs from "aws-cdk-lib/aws-logs";
+import { ILambdaRoute } from './types/ILambdaRoute';
+import { FactoryBase } from './FactoryBase';
+import { INamingProvider } from './namingProviders/INamingProvider';
+import { Construct } from 'constructs';
+import * as cdk from 'aws-cdk-lib';
+import * as cognito from 'aws-cdk-lib/aws-cognito';
+import * as apigateway from 'aws-cdk-lib/aws-apigateway';
+import * as lambda from 'aws-cdk-lib/aws-lambda';
+import * as logs from 'aws-cdk-lib/aws-logs';
 
 class constants {
-  static readonly RETENTION_DAYS: logs.RetentionDays.TWO_WEEKS;
+  static readonly RETENTIONDAYS: logs.RetentionDays.TWO_WEEKS;
 }
 
 export type AuthoriserConfig =
   | {
-      type: "cognito";
+      type: 'cognito';
       userPools: cognito.IUserPool[];
       identitySource?: string;
       resultsCacheTtlSeconds?: number;
     }
   | {
-      type: "lambda";
+      type: 'lambda';
       lambda: lambda.IFunction;
       identitySource?: string;
       validationRegex?: string;
@@ -28,12 +28,12 @@ export type AuthoriserConfig =
     };
 
 /**
- * Defines the parameters that are used to defined the restFul ApiGateway
- * @param description - a human readably summary the api's function
+ * Defines the parameters that are used to defind the restFul Apiateway
+ * @param description - a human readably summary the api's funcation
  * @param name - the name of the apigateway which is
  */
 export interface IApiGatewayRouterProperties {
-  cacheDurationSeconds: number;
+  cacheDurationMinutes: number;
   description: string;
   key: cdk.aws_kms.Key;
   name: string;
@@ -44,18 +44,18 @@ export interface IApiGatewayRouterProperties {
 /**
  * Create a restFul apigateway which allows for multiple routs and lambdas
  *
- * @param scope - the stack scope which is associated with the building of the gateway
+ * @param scope - the stack scope which is assoicated with the building of the gateway
 
  */
 export class ApiGatewayFactory extends FactoryBase {
   private defaultAuthorisation?: cdk.aws_apigateway.MethodOptions;
 
   constructor(
-    private readonly scope: Construct,
+    scope: Construct,
     serviceName: string,
     namingProvider?: INamingProvider,
   ) {
-    super(serviceName, namingProvider);
+    super(scope, serviceName, namingProvider);
   }
 
   /**
@@ -69,13 +69,13 @@ export class ApiGatewayFactory extends FactoryBase {
     props: IApiGatewayRouterProperties,
   ): apigateway.RestApi {
     const log = new logs.LogGroup(
-      this.scope,
-      `${this.getResourceId(id)}-AccessLogs`,
+      this.getScope(),
+      `${this.getResourceId(id)}-AccesssLogs`,
       {
         encryptionKey: props.key,
         retention: props.retentionDays
           ? props.retentionDays
-          : constants.RETENTION_DAYS,
+          : constants.RETENTIONDAYS,
         removalPolicy: cdk.RemovalPolicy.DESTROY,
       },
     );
@@ -89,23 +89,27 @@ export class ApiGatewayFactory extends FactoryBase {
         accessLogFormat: apigateway.AccessLogFormat.jsonWithStandardFields(),
         tracingEnabled: true,
         cacheClusterEnabled: true,
-        cacheClusterSize: "0.5",
+        cacheClusterSize: '0.5',
         methodOptions: {
-          "/*/*": {
+          '/*/*': {
             cachingEnabled: true,
-            cacheTtl: cdk.Duration.seconds(props.cacheDurationSeconds),
-            cacheDataEncrypted: true,
+            cacheTtl: cdk.Duration.minutes(props.cacheDurationMinutes),
+            cacheDataEncypted: true,
           },
         },
       },
     };
 
-    return new apigateway.RestApi(this.scope, this.getResourceId(id), apiProps);
+    return new apigateway.RestApi(
+      this.getScope(),
+      this.getResourceId(id),
+      apiProps,
+    );
   }
 
   /**
    *
-   * @param authorisation the type of authorization that will be applied to all added routes
+   * @param authorisation the type of authorsation that will be applied to all added routes
    */
   public setDefaultAuthorisation(
     authorisation: apigateway.MethodOptions,
@@ -114,7 +118,7 @@ export class ApiGatewayFactory extends FactoryBase {
   }
 
   /**
-   * Configures system to use IAM as it authorizer
+   * Configures system to use IAM as it authorisor
    */
   public enableIamAuthorisation(): void {
     this.setDefaultAuthorisation({
@@ -124,53 +128,53 @@ export class ApiGatewayFactory extends FactoryBase {
 
   /**
    *
-   * @param authorizer a cognito authorizer
+   * @param authorisor a cogniteo authorisor
    * @param scopes the scope which are allowed
    */
   public enableCognitoAuthorisation(
-    authorizer: apigateway.IAuthorizer,
+    authorisor: apigateway.IAuthorizer,
     scopes?: string[],
   ): void {
     this.setDefaultAuthorisation({
       authorizationType: apigateway.AuthorizationType.COGNITO,
-      authorizer: authorizer,
+      authorizer: authorisor,
       authorizationScopes: scopes,
     });
   }
 
   /**
    *
-   * @param authorizer the customer authorizer to use
+   * @param authorisor the customer authorisor to use
    */
-  public enableCustomAuthoriser(authorizer: apigateway.IAuthorizer): void {
+  public enableCustomAuthoriser(authorisor: apigateway.IAuthorizer): void {
     this.setDefaultAuthorisation({
       authorizationType: apigateway.AuthorizationType.CUSTOM,
-      authorizer: authorizer,
+      authorizer: authorisor,
     });
   }
 
   /**
    *
-   * @param id unique id for the scope of the stack
+   * @param id unique id for the scop of the stack
    * @param config an AuthoriserConfig detailing how the authorisation will. be preformed
    * @param api the api rest gateway to have the authorisation applied
-   * @returns an authorizer based on the config
+   * @returns an authorisor based on the config
    */
-  public createAuthorizer(
+  public createAuthorisor(
     id: string,
     config: AuthoriserConfig,
     api: apigateway.RestApi,
   ): apigateway.IAuthorizer {
-    if (config.type === "cognito") {
+    if (config.type === 'cognito') {
       return new apigateway.CognitoUserPoolsAuthorizer(
         api,
         this.getResourceId(id),
         {
           cognitoUserPools: config.userPools,
           identitySource:
-            config.identitySource ?? "method.request.header.Authorization",
+            config.identitySource ?? 'method.request.header.Authorization',
           resultsCacheTtl:
-            typeof config.resultsCacheTtlSeconds === "number"
+            typeof config.resultsCacheTtlSeconds === 'number'
               ? cdk.Duration.seconds(config.resultsCacheTtlSeconds)
               : undefined,
         },
@@ -180,10 +184,10 @@ export class ApiGatewayFactory extends FactoryBase {
     return new apigateway.TokenAuthorizer(api, this.getResourceId(id), {
       handler: config.lambda,
       identitySource:
-        config.identitySource ?? "method.request.header.Authorization",
+        config.identitySource ?? 'method.request.header.Authorization',
       validationRegex: config.validationRegex,
       resultsCacheTtl:
-        typeof config.resultsCacheTtlSeconds === "number"
+        typeof config.resultsCacheTtlSeconds === 'number'
           ? cdk.Duration.seconds(config.resultsCacheTtlSeconds)
           : undefined,
     });
@@ -213,12 +217,12 @@ export class ApiGatewayFactory extends FactoryBase {
         const cfnMethod = methodConstruct.node
           .defaultChild as apigateway.CfnMethod;
 
-        cfnMethod.addMetadata("checkov", {
+        cfnMethod.addMetadata('checkov', {
           skip: [
             {
               id: route.skipCheckovRule,
               comment:
-                "Authorization is handled externally / API method is intentionally unauthenticated.",
+                'Authorization is handled externally / API method is intentionally unauthenticated.',
             },
           ],
         });
@@ -228,8 +232,8 @@ export class ApiGatewayFactory extends FactoryBase {
 
   /**
    *
-   * @param routes adds multiple routes to the ApiGateway see {!ILambdaRoute} for details of the route
-   * @param api the ApiGateway to have the routes added too
+   * @param routes adds multiple routes to the apigateway see {!ILambdaRoute} for details of the route
+   * @param api the apigatway to have the routs added too
    */
   public addRoutes(routes: ILambdaRoute[], api: apigateway.RestApi): void {
     routes.forEach((route) => this.addRoute(route, api));
@@ -239,7 +243,7 @@ export class ApiGatewayFactory extends FactoryBase {
     path: string,
     api: apigateway.RestApi,
   ): apigateway.IResource {
-    const parts = path.replace(/^\//, "").split("/").filter(Boolean);
+    const parts = path.replace(/^\//, '').split('/').filter(Boolean);
 
     let current: apigateway.IResource = api.root;
 

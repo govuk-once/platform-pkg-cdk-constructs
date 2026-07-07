@@ -6,7 +6,6 @@ import * as lambda from "aws-cdk-lib/aws-lambda";
 import { LambdaFactory } from "./LambdaFactory.js";
 import { NullNamingProvider } from "./namingProviders/NullNamingProvider.js";
 import * as logs from "aws-cdk-lib/aws-logs";
-import * as path from "path";
 
 describe("lambdaFactory", () => {
   const serviceName = "WAFService";
