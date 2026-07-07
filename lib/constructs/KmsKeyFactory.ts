@@ -1,9 +1,9 @@
-import { Construct } from 'constructs';
-import { INamingProvider } from './namingProviders/INamingProvider';
-import { FactoryBase } from './FactoryBase';
-import * as cdk from 'aws-cdk-lib';
-import * as iam from 'aws-cdk-lib/aws-iam';
-import * as kms from 'aws-cdk-lib/aws-kms';
+import { Construct } from "constructs";
+import { INamingProvider } from "./namingProviders/INamingProvider.js";
+import { FactoryBase } from "./FactoryBase.js";
+import * as cdk from "aws-cdk-lib";
+import * as iam from "aws-cdk-lib/aws-iam";
+import * as kms from "aws-cdk-lib/aws-kms";
 
 export interface IKmsKeyProps {
   alias: string;
@@ -35,7 +35,7 @@ export class KmsKeyFactory extends FactoryBase {
       admins: props.admins,
     });
 
-    const aliasName = props.alias.startsWith('alias/')
+    const aliasName = props.alias.startsWith("alias/")
       ? props.alias
       : `alias/${props.alias}`;
 
