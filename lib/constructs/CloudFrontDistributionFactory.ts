@@ -39,11 +39,11 @@ export interface ICloudFrontDistributionApigatewayProperties extends ICloudFront
 
 export class CloudFrontDistributionFactory extends FactoryBase {
   constructor(
-    private readonly scope: Construct,
+    protected scope: Construct,
     serviceName: string,
     namingProvider?: INamingProvider,
   ) {
-    super(serviceName, namingProvider);
+    super(scope, serviceName, namingProvider);
   }
 
   public createS3Distribution(
@@ -75,7 +75,7 @@ export class CloudFrontDistributionFactory extends FactoryBase {
 
     const loggingProps = this.createLoggingProperties(props);
 
-    return new cloudfront.Distribution(this.scope, id, {
+    return new cloudfront.Distribution(this.scope, this.getResourceId(id), {
       enableIpv6: true,
       httpVersion: cloudfront.HttpVersion.HTTP2_AND_3,
       minimumProtocolVersion: cloudfront.SecurityPolicyProtocol.TLS_V1_2_2021,

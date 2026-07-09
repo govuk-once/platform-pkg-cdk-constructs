@@ -51,11 +51,11 @@ export class ApiGatewayFactory extends FactoryBase {
   private defaultAuthorisation?: cdk.aws_apigateway.MethodOptions;
 
   constructor(
-    private readonly scope: Construct,
+    scope: Construct,
     serviceName: string,
     namingProvider?: INamingProvider,
   ) {
-    super(serviceName, namingProvider);
+    super(scope, serviceName, namingProvider);
   }
 
   /**
@@ -69,7 +69,7 @@ export class ApiGatewayFactory extends FactoryBase {
     props: IApiGatewayRouterProperties,
   ): apigateway.RestApi {
     const log = new logs.LogGroup(
-      this.scope,
+      this.getScope(),
       `${this.getResourceId(id)}-AccessLogs`,
       {
         encryptionKey: props.key,
@@ -100,7 +100,11 @@ export class ApiGatewayFactory extends FactoryBase {
       },
     };
 
-    return new apigateway.RestApi(this.scope, this.getResourceId(id), apiProps);
+    return new apigateway.RestApi(
+      this.getScope(),
+      this.getResourceId(id),
+      apiProps,
+    );
   }
 
   /**

@@ -27,11 +27,11 @@ export interface IWafProperties {
 
 export class WafFactory extends FactoryBase {
   constructor(
-    private readonly scope: Construct,
+    scope: Construct,
     serviceName: string,
     namingProvider?: INamingProvider,
   ) {
-    super(serviceName, namingProvider);
+    super(scope, serviceName, namingProvider);
   }
 
   public createWebAcl(id: string, props: IWafProperties): waf.CfnWebACL {
@@ -89,7 +89,7 @@ export class WafFactory extends FactoryBase {
 
     props.customRules?.forEach((rule) => rules.push(rule));
 
-    return new waf.CfnWebACL(this.scope, this.getResourceId(id), {
+    return new waf.CfnWebACL(this.getScope(), this.getResourceId(id), {
       name: this.getResourceName(props.name),
       scope: props.scope,
       defaultAction:
