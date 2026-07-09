@@ -169,8 +169,8 @@ export class RoleHelper {
         case Operations.UPDATE:
           set.add("sqs:SendMessage");
           set.add("sqs:SendMessageBatch");
-          set.add("sqs:ChangeMessagevisibility");
-          set.add("sqs:ChangeMessagevisibilityBatch");
+          set.add("sqs:ChangeMessageVisibility");
+          set.add("sqs:ChangeMessageVisibilityBatch");
           set.add("sqs:SetQueueAttributes");
           break;
         case Operations.DELETE:

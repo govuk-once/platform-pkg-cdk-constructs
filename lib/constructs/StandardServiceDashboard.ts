@@ -25,7 +25,7 @@ class DashboardWidgetFactory extends FactoryBase {
     serviceName: string,
     namingProvider?: INamingProvider,
   ) {
-    super(new Construct(new App(), "dont use"), serviceName, namingProvider);
+    super(new Construct(new App(), "don't Use"), serviceName, namingProvider);
   }
 
   public createApiGatewayWidgets(api: RestApi): cloudWatch.IWidget[] {

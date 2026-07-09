@@ -12,7 +12,6 @@ import * as targets from "aws-cdk-lib/aws-events-targets";
 import * as kms from "aws-cdk-lib/aws-kms";
 import * as lambdaEventSources from "aws-cdk-lib/aws-lambda-event-sources";
 
-
 class constants {
   static readonly MEMORY_SIZE: number = 256;
   static readonly DURATION: number = 10;
@@ -149,7 +148,7 @@ export class LambdaFactory extends FactoryBase {
     if (props.enableEncryption) {
       encryptionKey =
         props.encryptionKey ??
-        this.kmsKeyFactory.createKey(`${id}-LambdalogKey`, {
+        this.kmsKeyFactory.createKey(`${id}-LambdaLogKey`, {
           alias: `${props.queueName}-key`,
           description: "KMS Key to secure the queue",
         }).key;
