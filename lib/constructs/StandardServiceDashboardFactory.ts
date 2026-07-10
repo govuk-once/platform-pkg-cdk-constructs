@@ -1,3 +1,4 @@
+import { App } from "aws-cdk-lib";
 import { Construct } from "constructs";
 import * as cloudWatch from "aws-cdk-lib/aws-cloudwatch";
 import { IFunction } from "aws-cdk-lib/aws-lambda";
@@ -25,7 +26,7 @@ class DashboardWidgetFactory extends FactoryBase {
     serviceName: string,
     namingProvider?: INamingProvider,
   ) {
-    super(serviceName, namingProvider);
+    super(new App(), serviceName, namingProvider);
   }
 
   public createApiGatewayWidgets(api: RestApi): cloudWatch.IWidget[] {

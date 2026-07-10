@@ -10,7 +10,7 @@ import { IKey } from "aws-cdk-lib/aws-kms";
 import { Stack } from "aws-cdk-lib";
 import { aws_kms } from "aws-cdk-lib";
 
-export enum CrudOperations {
+export enum Operations {
   CREATE = "CREATE",
   READ = "READ",
   UPDATE = "UPDATE",
@@ -25,7 +25,7 @@ export interface IRoleHelperProps {
   table?: dynamodb.ITable;
   bucket?: s3.IBucket;
   queue?: sqs.Queue;
-  operations: CrudOperations[];
+  operations: Operations[];
   role?: iam.Role;
 }
 
@@ -62,22 +62,22 @@ export class RoleHelper {
     console.log(`key = ${key}`);
 
     if (key) {
-      if (props.operations.find((op) => op === CrudOperations.READ)) {
+      if (props.operations.find((op) => op === Operations.READ)) {
         console.log(`adding decryption`);
         key.grantDecrypt(props.lambda);
         key.grantGenerateMac(props.lambda);
       }
-      if (props.operations.find((op) => op === CrudOperations.CREATE)) {
+      if (props.operations.find((op) => op === Operations.CREATE)) {
         console.log(`adding encryption create`);
         key.grantEncrypt(props.lambda);
         key.grantDecrypt(props.lambda);
       }
-      if (props.operations.find((op) => op === CrudOperations.UPDATE)) {
+      if (props.operations.find((op) => op === Operations.UPDATE)) {
         console.log(`adding encryption update`);
         key.grantEncrypt(props.lambda);
         key.grantDecrypt(props.lambda);
       }
-      if (props.operations.find((op) => op === CrudOperations.DELETE)) {
+      if (props.operations.find((op) => op === Operations.DELETE)) {
         console.log(`adding encryption update`);
         key.grantDecrypt(props.lambda);
       }
@@ -219,7 +219,7 @@ export class RoleHelper {
     if (roleCandidate) return roleCandidate as iam.Role;
 
     return new iam.Role(
-      this.getScope(),
+      this.scope,
       this.namingProvider.getResourceId(props.id) ?? "noId",
       {
         assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
@@ -233,25 +233,25 @@ export class RoleHelper {
     );
   }
 
-  private createDynamodbOperations(operations: CrudOperations[]): string[] {
+  private createDynamodbOperations(operations: Operations[]): string[] {
     const set = new Set<string>();
 
     operations.forEach((operation) => {
       switch (operation) {
-        case CrudOperations.CREATE:
+        case Operations.CREATE:
           set.add("dynamodb:PutItem");
           break;
-        case CrudOperations.READ:
+        case Operations.READ:
           set.add("dynamodb:BatchGetItem");
           set.add("dynamodb:GetItem");
           set.add("dynamodb:Query");
           set.add("dynamodb:Scan");
           set.add("dynamodb:DescribeTable");
           break;
-        case CrudOperations.UPDATE:
+        case Operations.UPDATE:
           set.add("dynamodb:UpdateItem");
           break;
-        case CrudOperations.DELETE:
+        case Operations.DELETE:
           set.add("dynamodb:DeleteItem");
           break;
       }
@@ -260,7 +260,7 @@ export class RoleHelper {
     return [...set];
   }
 
-  private createS3Operations(operations: CrudOperations[]): {
+  private createS3Operations(operations: Operations[]): {
     bucketActions: string[];
     objectActions: string[];
   } {
@@ -269,20 +269,20 @@ export class RoleHelper {
 
     operations.forEach((operation) => {
       switch (operation) {
-        case CrudOperations.CREATE:
+        case Operations.CREATE:
           objectActions.add("s3:PutObject");
           objectActions.add("s3:AbortMultipartUpload");
           objectActions.add("s3:ListMultipartUploadParts");
           break;
-        case CrudOperations.READ:
+        case Operations.READ:
           bucketActions.add("s3:ListBucket");
           objectActions.add("s3:GetObject");
           break;
-        case CrudOperations.UPDATE:
+        case Operations.UPDATE:
           objectActions.add("s3:PutObject");
           objectActions.add("s3:PutObjectTagging");
           break;
-        case CrudOperations.DELETE:
+        case Operations.DELETE:
           objectActions.add("s3:DeleteObject");
           break;
       }
