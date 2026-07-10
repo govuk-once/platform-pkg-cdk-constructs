@@ -197,7 +197,7 @@ export class RoleHelper {
     if (roleCandidate) return roleCandidate as iam.Role;
 
     return new iam.Role(
-      this.getScope(),
+      this.scope,
       this.namingProvider.getResourceId(props.id) ?? "noId",
       {
         assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
