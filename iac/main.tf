@@ -18,6 +18,11 @@ resource "aws_kms_key_policy" "codeartifact_kms_policy" {
         Principal = {
           AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
         },
+        Condition = {
+          test     = "ForAnyValue:StringLike"
+          variable = "aws:PrincipalOrgPaths"
+          values   = var.org_paths
+        },
         Action   = "kms:*"
         Resource = "*"
       },
