@@ -34,7 +34,7 @@ describe("Environment Naming Provider", () => {
     ).toBe(`${env}-${serviceName.toLowerCase()}-fred`);
   });
 
-  test("naming provider adds environment and service name the id truncates to 40 chars max", () => {
+  test('naming provider adds enviroment and service name the id truncates to 255 characters max', () => {
     const env = (
       process.env.ENVIRONMENT ??
       process.env.USER ??
@@ -43,15 +43,15 @@ describe("Environment Naming Provider", () => {
 
     const serviceName = "FishMaker";
     const resourceId =
-      `${env}-${serviceName.toLowerCase()}-fred-this-is-the-most-amazing-web-site-ever`.substring(
+      `${env}-${serviceName.toLowerCase()}-fred-this-is-the-most-amazing-web-site-ever-fdgdfg-fdgfd-gfdg-fdg-fdg-fdg-fgfd-gdf-gfd-g-fdg-fdg-df-gf-dg-df-gdf-g-dfg-d-gd`.substring(
         0,
-        40,
+        255,
       );
 
     const namingProvider = new ServiceEnvironmentNamingProvider(serviceName);
     expect(
       namingProvider.getResourceId(
-        "fred-this-is-the-most-amazing-web-site-ever",
+        'fred-this-is-the-most-amazing-web-site-ever-fdgdfg-fdgfd-gfdg-fdg-fdg-fdg-fgfd-gdf-gfd-g-fdg-fdg-df-gf-dg-df-gdf-g-dfg-d-gd',
       ),
     ).toBe(resourceId);
   });

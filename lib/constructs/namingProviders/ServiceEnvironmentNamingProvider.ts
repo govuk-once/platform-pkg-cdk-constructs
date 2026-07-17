@@ -12,22 +12,22 @@ export class ServiceEnvironmentNamingProvider implements INamingProvider {
     return `${environment}-${this.serviceName}`.toLowerCase();
   }
 
-  getResourceName(name: string): string {
+  getResourceName(name: string, maxLength?: number): string {
     if (name && !name.startsWith(this.getPrefix())) {
       return `${this.getPrefix()}-${name}`;
     }
-    return name;
+    return name.substring(0, maxLength ?? 255);
   }
 
   getResourceId(id?: string): string | undefined {
     if (id && !id.startsWith(this.getPrefix())) {
       const prefix = `${this.getPrefix()}-${id}`.toLowerCase();
-      return prefix.substring(0, 40);
+      return prefix.substring(0, 255);
     }
     return id;
   }
 
-  getEnvironment = (): string => {
+  getEnvironment(): string {
     const env = process.env.ENVIRONMENT || process.env.USER;
     if (!env) {
       throw new Error(
@@ -35,5 +35,5 @@ export class ServiceEnvironmentNamingProvider implements INamingProvider {
       );
     }
     return env.replace(/[^a-zA-Z0-9-]/g, "");
-  };
+  }
 }

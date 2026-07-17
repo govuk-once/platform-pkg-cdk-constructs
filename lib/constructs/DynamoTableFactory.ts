@@ -4,7 +4,6 @@ import { INamingProvider } from "./namingProviders/INamingProvider.js";
 import * as cdk from "aws-cdk-lib";
 import * as dynamoDB from "aws-cdk-lib/aws-dynamodb";
 import * as kms from "aws-cdk-lib/aws-kms";
-import * as iam from "aws-cdk-lib/aws-iam";
 
 export type DynamoTableProperties = {
   tableName: string;
@@ -44,41 +43,24 @@ export class DynamoTableFactory
   implements IDynamoTableContract
 {
   constructor(
-    private readonly scope: Construct,
-    private readonly region: string,
+    scope: Construct,
     serviceName: string,
     namingProvider?: INamingProvider,
   ) {
-    super(serviceName, namingProvider);
+    super(scope, serviceName, namingProvider);
   }
 
   public createTable(id: string, props: DynamoTableProperties): dynamoDB.Table {
-    const removalPolicy = props.removalPolicy ?? cdk.RemovalPolicy.RETAIN;
+    const removalPolicy = this.getRemovalPolicy(props.removalPolicy);
 
     const encryptionKey =
       props.key ??
-      new kms.Key(this.scope, `${this.getResourceId(id)}_key`, {
+      new kms.Key(this.getScope(), `${this.getResourceId(id)}_key`, {
         enableKeyRotation: true,
         removalPolicy,
       });
 
-    encryptionKey.addToResourcePolicy(
-      new iam.PolicyStatement({
-        principals: [
-          new iam.ServicePrincipal(`logs.${this.region}.amazonaws.com`),
-        ],
-        actions: [
-          "kms:Encrypt",
-          "kms:Decrypt",
-          "kms:ReEncrypt*",
-          "kms:GenerateDataKey*",
-          "kms:DescribeKey",
-        ],
-        resources: ["*"],
-      }),
-    );
-
-    const table = new dynamoDB.Table(this.scope, this.getResourceId(id), {
+    const table = new dynamoDB.Table(this.getScope(), this.getResourceId(id), {
       tableName: this.getResourceName(props.tableName),
       partitionKey: props.partitionKey,
       sortKey: props.sortKey,

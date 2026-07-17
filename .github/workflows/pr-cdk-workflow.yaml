@@ -54,12 +54,7 @@ jobs:
           pnpm install
           pnpm run build
 
-      - name: Synthesize CDK Stack
+      - name: Synthesize CDK Stack, check cdk-nag
         working-directory: test/cdk-app
         run: |
           npx cdk synth --quiet > template.yaml
-
-      - name: Run cdk-nag Validation
-        working-directory: test/cdk-app
-        run: |
-          node ../../node_modules/.pnpm/cdk-nag@2.37.55_aws-cdk-lib@2.238.0_constructs@10.5.1__constructs@10.5.1/node_modules/cdk-nag/lib/index.js --template-file template.yaml
