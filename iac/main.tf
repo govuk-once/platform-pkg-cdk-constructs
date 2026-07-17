@@ -62,7 +62,7 @@ resource "aws_kms_key_policy" "codeartifact_kms_policy" {
         Action = [
           "kms:Encrypt",
           "kms:Decrypt",
-          "kms:Re_encrypt*",
+          "kms:ReEncrypt*",
           "kms:GenerateDataKey*",
           "kms:DescribeKey"
         ],
