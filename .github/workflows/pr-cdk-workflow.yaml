@@ -48,13 +48,8 @@ jobs:
       - name: Run Tests
         run: "pnpm run test:ci"
 
-      - name: Build Test CDK App
-        working-directory: test/cdk-app
-        run: |
-          pnpm install
-          pnpm run build
-
       - name: Synthesize CDK Stack and Run cdk-nag Validation
         working-directory: test/cdk-app
         run: |
+          pnpm install
           pnpm run ci
