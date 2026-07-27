@@ -19,12 +19,12 @@ describe("CloudFrontDistributionFactory", () => {
     const serviceName = "lexicographer";
 
     const app = new App();
-    const stack = new Stack(app, "test-cloud-front");
+    const stack = new Stack(app, "testcloudfront");
 
     const bucket = new s3.Bucket(stack, "website");
     const factory = new CloudFrontDistributionFactory(stack, serviceName);
 
-    factory.createS3Distribution("test-cloud-front", {
+    factory.createS3Distribution("testcloud-front", {
       bucket,
       defaultRootObject: "start.html",
     });

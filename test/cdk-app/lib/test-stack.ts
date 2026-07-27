@@ -3,7 +3,6 @@ import * as cdk from 'aws-cdk-lib';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as logs from 'aws-cdk-lib/aws-logs';
 import * as kms from 'aws-cdk-lib/aws-kms';
-
 import { LambdaFactory } from '../../../lib/constructs/index';
 
 export class TestStack extends cdk.Stack {

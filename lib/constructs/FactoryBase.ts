@@ -1,19 +1,39 @@
+import { RemovalPolicy } from "aws-cdk-lib";
 import { INamingProvider } from "./namingProviders/INamingProvider.js";
 import { ServiceEnvironmentNamingProvider } from "./namingProviders/ServiceEnvironmentNamingProvider.js";
+import { Construct } from "constructs";
 
 export abstract class FactoryBase {
   private readonly namingProvider: INamingProvider;
 
-  protected constructor(serviceName: string, namingProvider?: INamingProvider) {
+  protected constructor(
+    protected scope: Construct,
+    serviceName?: string,
+    namingProvider?: INamingProvider,
+  ) {
     this.namingProvider =
       namingProvider ?? new ServiceEnvironmentNamingProvider(serviceName);
   }
 
-  getResourceId(id?: string): string {
+  public getScope(): Construct {
+    return this.scope;
+  }
+
+  public getResourceId(id?: string): string {
     return this.namingProvider.getResourceId(id) ?? "not set";
   }
 
-  getResourceName(name: string): string {
-    return this.namingProvider.getResourceName(name);
+  public getResourceName(name: string, maxLength: number = 255): string {
+    return this.namingProvider.getResourceName(name, maxLength);
+  }
+
+  public getRemovalPolicy(removalPolicy?: RemovalPolicy): RemovalPolicy {
+    if (removalPolicy !== undefined) {
+      return removalPolicy;
+    }
+
+    return this.namingProvider.getEnvironment().toLowerCase().startsWith("prod")
+      ? RemovalPolicy.RETAIN
+      : RemovalPolicy.DESTROY;
   }
 }

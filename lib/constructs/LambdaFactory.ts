@@ -1,10 +1,16 @@
+import { KmsKeyFactory } from "./KmsKeyFactory.js";
 import { Construct } from "constructs";
 import { ILambdaRoute } from "./types/ILambdaRoute.js";
 import { FactoryBase } from "./FactoryBase.js";
 import { INamingProvider } from "./namingProviders/INamingProvider.js";
 import * as cdk from "aws-cdk-lib";
 import * as lambda from "aws-cdk-lib/aws-lambda";
+import * as sqs from "aws-cdk-lib/aws-sqs";
 import * as logs from "aws-cdk-lib/aws-logs";
+import * as events from "aws-cdk-lib/aws-events";
+import * as targets from "aws-cdk-lib/aws-events-targets";
+import * as kms from "aws-cdk-lib/aws-kms";
+import * as lambdaEventSources from "aws-cdk-lib/aws-lambda-event-sources";
 
 class constants {
   static readonly MEMORY_SIZE: number = 256;
@@ -38,17 +44,62 @@ export interface IEnvironmentVariable {
   value: string;
 }
 
+export interface IScheduledTime {
+  hour: number;
+  minute: number;
+}
+
+export interface IScheduledLambdaProps extends ILambdaProperties {
+  cronName: string;
+
+  /** Use either interval or specific times  not both*/
+  interval?: cdk.Duration;
+  specificTimes?: IScheduledTime[];
+}
+
+export interface IScheduledLambdaProps extends ILambdaProperties {
+  cronName: string;
+
+  /** Use either interval or specific times  not both*/
+  interval?: cdk.Duration;
+  specificTimes?: IScheduledTime[];
+}
+
+export interface ISqsLambdaProps extends ILambdaProperties {
+  queueName: string;
+  visibilityTimeout: cdk.Duration;
+  retentionPeriod: cdk.Duration;
+  fifo?: boolean;
+  enableEncryption: boolean;
+  encryptionKey?: kms.IKey;
+  enableQueueTrigger?: boolean;
+  batchSize?: number;
+  maxBatchingWindow?: cdk.Duration;
+}
+
+export interface IScheduledLambda {
+  lambda: lambda.IFunction;
+  rules: events.Rule[];
+}
+
+export interface ISqsProcessingLambda {
+  lambda: lambda.IFunction;
+  queue: sqs.Queue;
+}
+
 /**
  * create a basic lambda configured as required to work with an routing apigateway or a stand alone lambda
  * @param scope - the stack scope which is associated with the building of the gateway
  */
 export class LambdaFactory extends FactoryBase {
+  kmsKeyFactory: KmsKeyFactory;
   constructor(
-    private readonly scope: Construct,
+    scope: Construct,
     serviceName: string,
     namingProvider?: INamingProvider,
   ) {
-    super(serviceName, namingProvider);
+    super(scope, serviceName, namingProvider);
+    this.kmsKeyFactory = new KmsKeyFactory(scope, serviceName, namingProvider);
   }
 
   /**
@@ -63,7 +114,7 @@ export class LambdaFactory extends FactoryBase {
     namedProps.timeout = cdk.Duration.seconds(props.duration);
 
     const log = new logs.LogGroup(
-      this.scope,
+      this.getScope(),
       `${this.getResourceId(id)}-LogGroup`,
       {
         logGroupName: `/aws/lambda/${this.getResourceName(namedProps.functionName)}`,
@@ -71,19 +122,123 @@ export class LambdaFactory extends FactoryBase {
           ? props.retentionDays
           : constants.RETENTION_DAYS,
         encryptionKey: props.key,
-        removalPolicy: cdk.RemovalPolicy.DESTROY,
+        removalPolicy: this.getRemovalPolicy(),
       },
     );
 
     namedProps.logGroup = log;
 
     const newFunction = new lambda.Function(
-      this.scope,
+      this.getScope(),
       this.getResourceId(id),
       namedProps,
     );
 
     return newFunction;
+  }
+
+  public createSQSTriggeredLambda(
+    id: string,
+    props: ISqsLambdaProps,
+  ): ISqsProcessingLambda {
+    const lambdaFunction = this.createLambda(id, props);
+
+    let encryptionKey: kms.IKey | undefined;
+
+    if (props.enableEncryption) {
+      encryptionKey =
+        props.encryptionKey ??
+        this.kmsKeyFactory.createKey(`${id}-LambdaLogKey`, {
+          alias: `${props.queueName}-key`,
+          description: "KMS Key to secure the queue",
+        }).key;
+    }
+
+    const queue = new sqs.Queue(this.getScope(), this.getResourceName(id), {
+      queueName: this.getResourceName(props.queueName),
+      visibilityTimeout: cdk.Duration.seconds(
+        props.visibilityTimeout.toSeconds() > props.duration * 6
+          ? props.visibilityTimeout.toSeconds()
+          : props.duration * 6,
+      ),
+      retentionPeriod: props.retentionPeriod,
+      fifo: props.fifo ?? false,
+      ...(props.enableEncryption && encryptionKey
+        ? {
+            encryption: sqs.QueueEncryption.KMS,
+            encryptionMasterKey: encryptionKey,
+          }
+        : {}),
+    });
+
+    if (encryptionKey) {
+      encryptionKey.grant(lambdaFunction, "kms:GenerateDataKey", "kms:Decrypt");
+    }
+
+    if (props.enableQueueTrigger ?? true) {
+      lambdaFunction.addEventSource(
+        new lambdaEventSources.SqsEventSource(queue, {
+          batchSize: props.batchSize ?? 10,
+          maxBatchingWindow: props.maxBatchingWindow,
+          reportBatchItemFailures: true,
+        }),
+      );
+      queue.grantConsumeMessages(lambdaFunction);
+    }
+
+    return {
+      lambda: lambdaFunction,
+      queue,
+    };
+  }
+
+  public createScheduledLambda(
+    id: string,
+    props: IScheduledLambdaProps,
+  ): IScheduledLambda {
+    if (!!props.interval === !!props.specificTimes) {
+      throw new Error(
+        "Invalid properties supply either interval or specificTimes not both",
+      );
+    }
+
+    const lambdaFunction = this.createLambda(id, props);
+    const rules: events.Rule[] = [];
+
+    if (props.interval) {
+      const rule = new events.Rule(this.getScope(), `${id}ScheduleRule`, {
+        ruleName: props.cronName,
+        schedule: events.Schedule.rate(props.interval),
+      });
+
+      rule.addTarget(new targets.LambdaFunction(lambdaFunction));
+      rules.push(rule);
+    }
+
+    props.specificTimes?.forEach((time) => {
+      const rule = new events.Rule(
+        this.getScope(),
+        `${id}ScheduleRule${time.hour}${time.minute}`,
+        {
+          ruleName:
+            props.specificTimes!.length === 1
+              ? props.cronName
+              : `${props.cronName}-${time.hour}${time.minute}}`,
+          schedule: events.Schedule.cron({
+            hour: `${time.hour}`,
+            minute: `${time.minute}`,
+          }),
+        },
+      );
+
+      rule.addTarget(new targets.LambdaFunction(lambdaFunction));
+      rules.push(rule);
+    });
+
+    return {
+      lambda: lambdaFunction,
+      rules,
+    };
   }
 
   /**

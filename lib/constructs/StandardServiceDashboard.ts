@@ -1,13 +1,12 @@
-import { App } from "aws-cdk-lib";
 import { Construct } from "constructs";
+import { App } from "aws-cdk-lib";
 import * as cloudWatch from "aws-cdk-lib/aws-cloudwatch";
 import { IFunction } from "aws-cdk-lib/aws-lambda";
 import { RestApi } from "aws-cdk-lib/aws-apigateway";
 import { ITable } from "aws-cdk-lib/aws-dynamodb";
 
-import { FactoryBase } from "./FactoryBase.js";
-import { INamingProvider } from "./namingProviders/INamingProvider.js";
-import { Duration } from "aws-cdk-lib";
+import { FactoryBase } from "./FactoryBase";
+import { INamingProvider } from "./namingProviders/INamingProvider";
 
 export interface IStandardServiceDashboardProps {
   name: string;
@@ -26,11 +25,11 @@ class DashboardWidgetFactory extends FactoryBase {
     serviceName: string,
     namingProvider?: INamingProvider,
   ) {
-    super(new App(), serviceName, namingProvider);
+    super(new Construct(new App(), "don't Use"), serviceName, namingProvider);
   }
 
   public createApiGatewayWidgets(api: RestApi): cloudWatch.IWidget[] {
-    const name = api.restApiName;
+    const name = this.getResourceName(api.restApiName);
 
     const errors = new cloudWatch.GraphWidget({
       title: `${name} - 4xx / 5xx Errors`,
@@ -50,7 +49,7 @@ class DashboardWidgetFactory extends FactoryBase {
   }
 
   public createLambdaWidgets(lambda: IFunction): cloudWatch.IWidget[] {
-    const name = lambda.functionName ?? "lambda";
+    const name = this.getResourceName(lambda.functionName ?? "lambda");
 
     const errors = new cloudWatch.GraphWidget({
       title: `${name} - Errors and Throttles`,
@@ -60,22 +59,17 @@ class DashboardWidgetFactory extends FactoryBase {
     });
 
     const invocationDuration = new cloudWatch.GraphWidget({
-      title: `${name} - Invocations (sum) and Durations (average ms)`,
+      title: `${name} - Invocations and Durations`,
       width: this.width,
       height: this.height,
-      left: [
-        lambda.metricInvocations({ statistic: "Sum" }),
-        lambda.metricDuration({
-          statistic: "Average",
-        }),
-      ],
+      left: [lambda.metricInvocations(), lambda.metricDuration()],
     });
 
     return [errors, invocationDuration];
   }
 
   public createDynamoWidgets(table: ITable): cloudWatch.IWidget[] {
-    const name = table.tableName ?? "DynamoTable";
+    const name = this.getResourceName(table.tableName ?? "DynamoTable");
 
     const units = new cloudWatch.GraphWidget({
       title: `${name} - Consumed RCU / WCU`,
@@ -122,7 +116,7 @@ export class StandardServiceDashboardFactory extends FactoryBase {
     props: IStandardServiceDashboardProps,
   ): cloudWatch.Dashboard {
     const dashboard = new cloudWatch.Dashboard(
-      this.scope,
+      this.getScope(),
       this.getResourceId(id),
       {
         dashboardName: this.getResourceName(props.name),
@@ -147,5 +141,3 @@ export class StandardServiceDashboardFactory extends FactoryBase {
     return dashboard;
   }
 }
-
-export default StandardServiceDashboardFactory;

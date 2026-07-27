@@ -172,7 +172,7 @@ describe(" Standard Dashboard", () => {
     ]);
   });
 
-  test("creates a dashboard with an Dynamo", () => {
+  test("creates a dashboard with a Dynamo", () => {
     const app = new App();
     const stack = new Stack(app, "test-stack");
 

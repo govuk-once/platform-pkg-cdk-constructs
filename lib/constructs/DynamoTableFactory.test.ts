@@ -20,7 +20,7 @@ describe("DynamoTableFactory", () => {
     const app = new App();
     const stack = new Stack(app, "testCloudfront");
 
-    const factory = new DynamoTableFactory(stack, "eu-west", serviceName);
+    const factory = new DynamoTableFactory(stack, serviceName);
 
     factory.createTable("petShop", {
       tableName: "pet-store",
@@ -68,7 +68,6 @@ describe("DynamoTableFactory", () => {
 
     const factory = new DynamoTableFactory(
       stack,
-      "eu-west",
       serviceName,
       new NullNamingProvider(),
     );
@@ -93,7 +92,7 @@ describe("DynamoTableFactory", () => {
     const app = new App();
     const stack = new Stack(app, "TestDynamoStack");
 
-    const factory = new DynamoTableFactory(stack, "eu-west", serviceName);
+    const factory = new DynamoTableFactory(stack, serviceName);
 
     factory.createTable("petShop", {
       tableName: "pet-store",
@@ -140,7 +139,7 @@ describe("DynamoTableFactory", () => {
       enableKeyRotation: true,
     });
 
-    const factory = new DynamoTableFactory(stack, "eu-west", serviceName);
+    const factory = new DynamoTableFactory(stack, serviceName);
 
     factory.createTable("petShop", {
       tableName: "pet-store",
@@ -170,7 +169,7 @@ describe("DynamoTableFactory", () => {
     const app = new App();
     const stack = new Stack(app, "TestDynamoStack");
 
-    const factory = new DynamoTableFactory(stack, "eu-west", serviceName);
+    const factory = new DynamoTableFactory(stack, serviceName);
 
     factory.createTable("petShop", {
       tableName: "pet-store",
@@ -204,7 +203,7 @@ describe("DynamoTableFactory", () => {
     const app = new App();
     const stack = new Stack(app, "TestDynamoStack");
 
-    const factory = new DynamoTableFactory(stack, "eu-west", serviceName);
+    const factory = new DynamoTableFactory(stack, serviceName);
 
     factory.createTable("petShop", {
       tableName: "pet-store",
