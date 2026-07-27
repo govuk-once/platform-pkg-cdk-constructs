@@ -51,5 +51,4 @@ jobs:
       - name: Synthesize CDK Stack and Run cdk-nag Validation
         working-directory: test/cdk-app
         run: |
-          pnpm install
-          pnpm run ci
+          pnpm i --frozen-lockfile && pnpm run ci

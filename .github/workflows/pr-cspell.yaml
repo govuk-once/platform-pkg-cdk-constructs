@@ -21,7 +21,7 @@ jobs:
           cache: "pnpm"
 
       - name: Install dependencies
-        run: "pnpm install"
+        run: "pnpm i --frozen-lockfile"
 
       - name: Spellcheck
         run: "pnpm run spg"
