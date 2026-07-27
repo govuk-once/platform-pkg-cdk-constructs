@@ -5,10 +5,11 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
-    "synth": "cdk synth"
+    "synth": "cdk synth --quiet --no-notices > template.yaml",
+    "ci": "pnpm run build && pnpm run synth"
   },
   "devDependencies": {
-    "aws-cdk": "^2.1101.0",
+    "aws-cdk": "^2.1133.0",
     "aws-cdk-lib": "^2.235.0",
     "constructs": "^10.5.1",
     "typescript": "^5.9.3"

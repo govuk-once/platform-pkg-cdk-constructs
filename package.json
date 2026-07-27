@@ -15,7 +15,6 @@
     "build:cjs": "tsc -p tsconfig.cjs.json",
     "build": "pnpm run build:esm && pnpm run build:cjs",
     "lint": "nx eslint:lint",
-    "spg:terraform": "cspell iac/**",
     "spg:typescript": "cspell lib/**",
     "spg": "cspell \"**/*.{txt,ts,md,tf,yaml}\""
   },
@@ -24,7 +23,7 @@
   "license": "ISC",
   "packageManager": "pnpm@10.26.0",
   "peerDependencies": {
-    "aws-cdk": "^2.1101.0",
+    "aws-cdk": "^2.1130.0",
     "aws-cdk-lib": "^2.235.0"
   },
   "exports": {
@@ -61,7 +60,7 @@
     "@typescript-eslint/eslint-plugin": "^8.53.1",
     "@typescript-eslint/parser": "^8.53.1",
     "@vitest/coverage-v8": "^4.1.0",
-    "aws-cdk": "^2.1101.0",
+    "aws-cdk": "^2.1133.0",
     "aws-cdk-lib": "^2.235.0",
     "axios": "^1.13.3",
     "cdk-nag": "^2.37.55",

@@ -35,7 +35,7 @@ jobs:
           role-to-assume: ${{ secrets.DEPLOYMENT_ROLE_ARN }}
 
       - name: Install Deps
-        run: pnpm install
+        run: pnpm i --frozen-lockfile
 
       - name: Build Package
         run: pnpm run build
