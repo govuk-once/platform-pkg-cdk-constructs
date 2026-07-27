@@ -57,7 +57,7 @@ jobs:
       - name: Synthesize CDK Stack
         working-directory: test/cdk-app
         run: |
-          npx cdk synth --quiet > template.yaml
+          npx cdk synth --quiet --no-notices > template.yaml
 
       - name: Run cdk-nag Validation
         working-directory: test/cdk-app

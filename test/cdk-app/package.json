@@ -5,7 +5,7 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
-    "synth": "cdk synth"
+    "synth": "cdk synth --quiet --no-notices"
   },
   "devDependencies": {
     "aws-cdk": "^2.1101.0",
